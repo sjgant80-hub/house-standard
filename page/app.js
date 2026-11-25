@@ -60,8 +60,8 @@ function render() {
     + (v && v.headline ? `<div class="stat reveal"><div class="n"><span class="was">${esc(v.headline.was)}</span><span class="arrow">→</span><span class="now" data-count="${esc(v.headline.now)}">${esc(v.headline.now)}</span></div><div class="lab">Right, of <b>${v.headline.of} sealed problems</b> it had never seen. Same model, same weights. The only change is a checker.</div>${src(v, 'the verifier set')}</div>` : none('Sealed problems right, unchecked then checked.'))
     + (f ? `<div class="stat reveal"><div class="n"><span class="now" data-count="${esc(f.value)}">${esc(f.value)}</span><span class="was" style="font-size:.42em"> /${f.of.toLocaleString('en')}</span></div><div class="lab"><b>Forged replies</b> that got past the check, of ${f.of.toLocaleString('en')} thrown at it.</div>${src(c, 'the crystal')}</div>` : none('Forged replies that got past the check.'));
   $('readLine').innerHTML = S.live === null ? `Read from each build's own page on ${esc(S.read)}, at a named commit. Reading them again, live…` : S.live.tried === 0 ? `Read from each build's own page on ${esc(S.read)}, at a named commit.` : `<span class="${S.live.differ ? 'fail' : 'pass'}">Read again just now, in this tab, from ${S.live.got} of ${S.live.tried} live pages: ${S.live.differ ? `${S.live.differ} differ from the reading of ${esc(S.read)}, and the live reading is shown` : 'every number agrees'}.</span>`;
-  $('builds').innerHTML = S.builds.map((b, i) => { const h = b.headline, wait = !h && b.claims.sealing > 0;
-    return `<a class="act reveal" href="${b.live}"><span class="num">0${i + 1} — ${esc(b.name.toUpperCase())}${wait ? ` ${SEALING}` : ''}</span><h3>${esc(b.verb)}</h3><p>${esc(b.line)}${h ? ` <b style="color:var(--ink)">${esc(h.was)} → ${esc(h.now)}</b> of ${h.of} sealed problems.` : ''}${b.claims.n ? ` <span class="dim">${b.claims.pass} of ${b.claims.n} claims passed${b.claims.fail ? `, ${b.claims.fail} failed and kept` : ''}${b.claims.sealing ? `, ${b.claims.sealing} sealing` : ''}.</span>` : ''}</p><span class="go">Open the live proof →</span></a>`; }).join('');
+  $('builds').innerHTML = S.builds.map((b, i) => { const h = b.headline, wait = !h && b.claims.sealing > 0, cells = grown(b);
+    return `<a class="act reveal" href="${b.live}"><span class="num">0${i + 1} — ${esc(b.name.toUpperCase())}${wait ? ` ${SEALING}` : ''}</span><h3>${esc(b.verb)}</h3><p>${esc(b.line)}${h ? ` <b style="color:var(--ink)">${esc(h.was)} → ${esc(h.now)}</b> of ${h.of} sealed problems.` : cells ? ` <b style="color:var(--ink)">${esc(cells.sealed)} of ${cells.of}</b> cells sealed, ${esc(cells.dissolved)} dissolved.` : ''}${b.claims.n ? ` <span class="dim">${b.claims.pass} of ${b.claims.n} claims passed${b.claims.fail ? `, ${b.claims.fail} failed and kept` : ''}${b.claims.sealing ? `, ${b.claims.sealing} sealing` : ''}.</span>` : ''}</p><span class="go">Open the live proof →</span></a>`; }).join('');
   const reuse = S.reuse ? Math.round(100 * S.reuse.taken / (S.reuse.taken + S.reuse.worked)) : null;
   const tagOf = (id) => (id === 'D3' && reuse !== null ? `<span class="tag cy">${reuse}% of tokens reused</span>` : id === 'D5' ? (d && d.headline ? `<span class="tag cy">${esc(d.headline.was)} → ${esc(d.headline.now)} cold</span>` : SEALING) : '');
   $('stackRows').innerHTML = LAYERS.map(([id, nm, line]) => `<div class="srow ${id === 'D5' && !(d && d.headline) ? 'gold' : ''}"><div class="d">${id}</div><div class="nm"><b>${nm}</b><span>${line}</span>${tagOf(id)}</div></div>`).join('');
@@ -84,6 +84,9 @@ function render() {
   HOUSE.reveal(document);                                                 // what was just drawn rises in like the rest
 }
 
+// grown(b) → a build that states cells instead of a before and after: how many it sealed and dissolved, or null
+function grown(b) { const s = b.extra.find((x) => x.key === 'sealed'), d = b.extra.find((x) => x.key === 'dissolved'); return s && d ? { sealed: s.value, dissolved: d.value, of: s.of } : null; }
+
 // one face for every receipt on the page, in the order the page shows them
 function faces() {
   const out = [], v = B('the-verifier-set'), c = B('the-crystal'), d = B('the-distillation');
@@ -93,7 +96,7 @@ function faces() {
   add(u ? 1 : 2, u ? `<b>${esc(u.value)} → ${esc(u.after)}</b> · confident numbers to questions with no answer` : 'sealing now', 'result');
   add(v && v.headline ? 1 : 2, v && v.headline ? `<b>${esc(v.headline.was)} → ${esc(v.headline.now)}</b> of ${v.headline.of} sealed problems · The Verifier Set` : 'sealing now', 'result');
   add(f ? 1 : 2, f ? `<b>${esc(f.value)} of ${f.of.toLocaleString('en')}</b> forged replies got past the check · The Crystal` : 'sealing now', 'result');
-  for (const b of S.builds) add(b.headline ? 1 : b.claims.sealing > 0 ? 2 : 1, `<b>${esc(b.name)}</b> · ${b.headline ? `${esc(b.headline.was)} → ${esc(b.headline.now)} of ${b.headline.of}` : b.claims.sealing > 0 ? 'sealing now' : 'live'}`, 'builds-s');
+  for (const b of S.builds) add(b.headline ? 1 : b.claims.sealing > 0 ? 2 : 1, `<b>${esc(b.name)}</b> · ${b.headline ? `${esc(b.headline.was)} → ${esc(b.headline.now)} of ${b.headline.of}` : b.claims.sealing > 0 ? 'sealing now' : grown(b) ? `${esc(grown(b).sealed)} of ${grown(b).of} cells sealed, ${esc(grown(b).dissolved)} dissolved` : 'live'}`, 'builds-s');
   for (const [id, nm] of LAYERS) add(id === 'D5' && !(d && d.headline) ? 2 : 1, `<b>${id} · ${nm}</b>${id === 'D5' && !(d && d.headline) ? ' · sealing now' : ''}`, 'engine');
   for (const b of S.builds) for (const x of b.claims.failed) add(3, `<b>${esc(b.name)} · ${esc(x.id)}</b> failed its bar, and is kept · ${esc(x.name)}`, 'proof');
   for (const b of S.builds) add(b.standard.pass ? 1 : 3, `<b>${esc(b.name)}</b> · the house standard: ${b.standard.pass ? 'meets it' : `fails ${b.standard.rules.filter((r) => !r.pass).length} of 7, kept until rebuilt`}`, 'standard');

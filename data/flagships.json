@@ -8,7 +8,7 @@
    "verb": "It climbs.",
    "line": "A problem it fails cold, broken into steps it can do. Each step checked.",
    "live": "https://sjgant80-hub.github.io/the-climb/",
-   "commit": "0f048b3bd8dd2c41272e33bde651bed99e93393a",
+   "commit": "ebe420b3a23fa6c894bbbeac8613b6f28edcb3d4",
    "headline": {
     "was": "36.5%",
     "now": "70.8%",
@@ -49,7 +49,7 @@
      {
       "id": "H4",
       "pass": true,
-      "why": "no placeholder on the page"
+      "why": "no placeholder on the page; no id used twice"
      },
      {
       "id": "H5",
@@ -82,7 +82,7 @@
    "verb": "It crystallises.",
    "line": "The answer grown from proven pieces. What cannot be proven dissolves.",
    "live": "https://sjgant80-hub.github.io/the-crystal/",
-   "commit": "1220ae1b2d8dd0b3d29c904270462054210c827f",
+   "commit": "89880559b9984fe50e587f3908f13e669d99f591",
    "headline": {
     "was": "31.0%",
     "now": "85.7%",
@@ -125,7 +125,7 @@
      {
       "id": "H4",
       "pass": true,
-      "why": "no placeholder on the page"
+      "why": "no placeholder on the page; no id used twice"
      },
      {
       "id": "H5",
@@ -158,7 +158,7 @@
    "verb": "It refuses to lie.",
    "line": "Checked against the arithmetic or the cited source, or not released.",
    "live": "https://sjgant80-hub.github.io/the-verifier-set/",
-   "commit": "bc851d5e7f990232d40e2e073cc1e5bcab121910",
+   "commit": "6b645d57435fad49341f6cc7ab06ca36f04a6474",
    "headline": {
     "was": "34",
     "now": "139",
@@ -202,7 +202,7 @@
      {
       "id": "H4",
       "pass": true,
-      "why": "no placeholder on the page"
+      "why": "no placeholder on the page; no id used twice"
      },
      {
       "id": "H5",
@@ -235,9 +235,22 @@
    "verb": "It grows itself.",
    "line": "A handful of files that grows verified software, one cell at a time.",
    "live": "https://sjgant80-hub.github.io/the-seed/",
-   "commit": "fa3fe9fb238a3dd71224b2982fb0775322be0f28",
+   "commit": "ae53731e9cd537c8ed52e488e4921551fbd19c23",
    "headline": null,
-   "extra": [],
+   "extra": [
+    {
+     "key": "sealed",
+     "value": "3",
+     "of": 5,
+     "label": "cells the model grew that proved themselves and were sealed"
+    },
+    {
+     "key": "dissolved",
+     "value": "2",
+     "of": 5,
+     "label": "cells that could not prove themselves and were dissolved"
+    }
+   ],
    "claims": {
     "n": 0,
     "pass": 0,
@@ -246,50 +259,50 @@
     "failed": []
    },
    "standard": {
-    "pass": false,
+    "pass": true,
     "rules": [
      {
       "id": "H1",
-      "pass": false,
-      "why": "missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander"
+      "pass": true,
+      "why": "crystal hero, 5 receipts, 10 stack rows, 4 controls on the glass, 9 expanders"
      },
      {
       "id": "H2",
-      "pass": false,
-      "why": "2010 words before any click (at most 1250); the longest paragraph is 205 words (at most 45)"
+      "pass": true,
+      "why": "565 words before any click (at most 1250); the longest paragraph is 28 words (at most 45)"
      },
      {
       "id": "H3",
-      "pass": false,
-      "why": "0 of 0 receipts carry their source, or say they are still sealing"
+      "pass": true,
+      "why": "5 of 5 receipts carry their source, or say they are still sealing"
      },
      {
       "id": "H4",
       "pass": true,
-      "why": "no placeholder on the page"
+      "why": "no placeholder on the page; no id used twice"
      },
      {
       "id": "H5",
-      "pass": false,
-      "why": "0 limits behind a click (at least 3); a failure or an unfinished part is shown as one"
+      "pass": true,
+      "why": "23 limits behind a click (at least 3); a failure or an unfinished part is shown as one"
      },
      {
       "id": "H6",
-      "pass": false,
-      "why": "2 of 4 house colours, 2 of 3 house faces"
+      "pass": true,
+      "why": "4 of 4 house colours, 3 of 3 house faces"
      },
      {
       "id": "H7",
-      "pass": false,
-      "why": "the credit line is missing; no price; no private shorthand"
+      "pass": true,
+      "why": "the credit line is left off, and the page says why: left off on the owner's instruction for this build, until he rules on it; no price; no private shorthand"
      }
     ],
-    "viewWords": 2010,
-    "longest": 205
+    "viewWords": 565,
+    "longest": 28
    },
    "gate": {
-    "killed": 131,
-    "total": 131,
+    "killed": 142,
+    "total": 142,
     "clean": true
    }
   },
@@ -299,7 +312,7 @@
    "verb": "It learns.",
    "line": "Trained only on its own verified work. Tested cold on problems it never saw.",
    "live": "https://sjgant80-hub.github.io/the-distillation/",
-   "commit": "1ac0af80d2ad0eeba4cbe929034bdc4d201f149c",
+   "commit": "bae43fcb3c9898a58c0d87dc4348f10d832fc767",
    "headline": null,
    "extra": [],
    "claims": {
@@ -330,7 +343,7 @@
      {
       "id": "H4",
       "pass": true,
-      "why": "no placeholder on the page"
+      "why": "no placeholder on the page; no id used twice"
      },
      {
       "id": "H5",
@@ -378,10 +391,10 @@
   "round": 1,
   "stage": "harvest",
   "harvest": {
-   "done": 130,
+   "done": 300,
    "total": 573,
-   "complete": 129,
-   "calls": 886
+   "complete": 296,
+   "calls": 2297
   },
   "train": null,
   "cold": {
@@ -391,11 +404,11 @@
   "verdict": null,
   "done": false,
   "failed": false,
-  "at": "2026-11-25T22:32:40.801Z"
+  "at": "2026-11-25T22:53:51.377Z"
  },
  "gate": {
-  "killed": 70,
-  "total": 70,
+  "killed": 80,
+  "total": 80,
   "clean": true
  }
 }

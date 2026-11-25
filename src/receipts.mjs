@@ -42,6 +42,7 @@ const READ = {
 const MORE = {
   'the-crystal': (t) => { const m = t.match(/forged replies that bonded (\d+) of (\d+)/); return m ? [{ key: 'forged', value: m[1], of: Number(m[2]), label: 'forged replies that got past the check' }] : []; },
   'the-verifier-set': (t) => { const m = t.match(/on the (\d+) with no answer it gave a number (\d+) times\. With the checks, \d+ of \d+ came out as they should, and none of those \1 was answered/); return m ? [{ key: 'unanswerable', value: m[2], after: '0', of: Number(m[1]), label: 'confident numbers given to questions that have no answer: unchecked, then checked' }] : []; },
+  'the-seed': (t) => { const a = t.match(/(\d+) \/(\d+) Cells sealed, of \2 grown\./), b = t.match(/(\d+) Cells? dissolved\./); return a && b ? [{ key: 'sealed', value: a[1], of: Number(a[2]), label: 'cells the model grew that proved themselves and were sealed' }, { key: 'dissolved', value: b[1], of: Number(a[2]), label: 'cells that could not prove themselves and were dissolved' }] : []; },
 };
 const own = (map, repo) => (typeof repo === 'string' && Object.prototype.hasOwnProperty.call(map, repo) ? map[repo] : null);
 

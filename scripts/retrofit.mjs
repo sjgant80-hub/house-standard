@@ -23,19 +23,39 @@ export const BUILDS = {
     // button stays in the markup, hidden, so the unchanged page script still finds it. A price is not put on a page.
     flat: { glass: 'live', keep: '<button id="theme" type="button" hidden>Theme</button>', drop: ['  <span class="chip">charge per problem <b>$0</b> <span class="muted">(one model download, then your own hardware)</span></span>\n'] }, h1: 'It <em>climbs.</em>', sub: 'A problem it fails cold, broken into steps it can do. Each step is checked before the next.', claim: 'One try, against the climb. <b>Same model, same weights.</b>', glass: 'Run the climb on your own graphics chip, or replay the sealed record. Nothing leaves your browser.', receipt: 'data/runs/sealed.json',
     limits: ['<b>A claim failed, and stays.</b> Not every pre-registered claim passed. The one that did not is in the stack above, in red.', '<b>The reach of the check.</b> Exact arithmetic only. Where it cannot check, it gives no answer.', '<b>One sealed run.</b> One model, problems made by code.'] },
+  // its page is a plain top section and panels, and one panel ("plant") is its glass. It has no table of claims: its
+  // stack is its organs, and its receipts come from its recorded plant, so it brings a house layer of its own
+  // (retrofit/the-seed.js). Two of its ids were each on two elements; the sections that held them are renamed.
+  'the-seed': { name: 'The Seed', ready: '__seed', ids: { claims: 'organs', glass: 'run' }, panel: { glass: 'plant', rename: { blueprint: 'built' } }, layer: 'retrofit/the-seed.js',
+    noCredit: "left off on the owner's instruction for this build, until he rules on it",
+    stack: { kline: 'How it is built', claim: 'Small files, one job each. <b>Every one mutation-gated.</b>', wait: 'Reading the gate record.' }, cta: 'Plant it yourself', crystal: 'Each lit face is one organ, one cell the model grew, or one probe of the floor: cyan when it held, red when it did not.',
+    swap: [['<li><b>Depth 5 is not built.</b> The distillation organ harvests verified cells and gates adoption, but it does not train weights, and it never adopts without beating the sealed set and a human grant.</li>', '<li><b>The seed does not train.</b> Its distillation organ harvests verified cells and gates adoption; it changes no weights, and it never adopts without beating the sealed set and a human grant. The training itself is a separate build, <a href="https://sjgant80-hub.github.io/the-distillation/">The Distillation</a>.</li>']],
+    h1: 'Plant it. It <em>grows.</em>', sub: 'A handful of small files. Give it a model and an empty workspace, and it grows software one checked cell at a time. What cannot prove itself dissolves.', claim: 'A 1B model, planted in a browser tab. <b>It kept only what it could prove.</b>', glass: 'Plant it on your own graphics chip, or show the recorded plant. Nothing leaves your browser.', receipt: 'data/runs/plant.json',
+    limits: ['<b>A first cell, not a finished organism.</b> It shows the loop is alive and every bond is checked. It has not grown an estate.', '<b>Grounded is not true.</b> A grounded cell cites its document faithfully. If the document is wrong, so is the cell.', '<b>It does not train.</b> Its distillation organ gates adoption. It changes no weights.', '<b>The model is not pinned.</b> The browser model comes from a public library and is not checked against a fixed fingerprint here.'] },
 };
 
 const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 // scope(css) → the old page's own styles, kept for its own content only: every rule sits under .legacy, the old
 // colours become .legacy's own, and the rules for parts the house now provides (page, header, hero, footer) go.
+// rules(css) → each top-level rule of a style sheet on a line of its own, however the sheet was laid out
+export function rules(css) {
+  const out = []; let depth = 0, cur = '';
+  for (const ch of css.replace(/\/\*[\s\S]*?\*\//g, '')) {
+    cur += ch === '\n' || ch === '\r' ? ' ' : ch;
+    if (ch === '{') depth++;
+    else if (ch === '}') { depth--; if (depth === 0) { out.push(cur.replace(/\s+/g, ' ').replace(/\s*\{\s*/g, '{').replace(/\s*\}\s*/g, '}').trim()); cur = ''; } }
+  }
+  return out;
+}
 export function scope(css) {
-  const out = [], gone = /^(\*|html|body|main|footer|nav|#gem|\.top|\.hero|\.mark|section\.panel|h1)([\s{>,:. ]|$)/;
+  const out = [], gone = /^(\*|html|body|main|header|footer|nav|:root|#gem|\.top|\.hero|\.mark|section\.panel|h1)([\s{>,:. ]|$)/;
   const one = (rule) => { const i = rule.indexOf('{'); if (i < 0) return ''; const sels = rule.slice(0, i).split(',').map((s) => s.trim()).filter((s) => s && !gone.test(s)); return sels.length ? `${sels.map((s) => (s.startsWith('#') ? s : `.legacy ${s}`)).join(',')}${rule.slice(i)}` : ''; };
-  for (const line of css.split('\n').map((l) => l.trim()).filter(Boolean)) {
+  for (const line of rules(css)) {
     // the house is committed dark: where the old page had a dark theme of its own, those are its colours now
     if (/^:root\[data-theme="?dark"?\]\{/.test(line)) { out.push(`.legacy{${line.slice(line.indexOf('{') + 1, -1).replace(/color-scheme:[^;}]+;?/, '')}}`); continue; }
     if (line.startsWith('@font-face') || line.startsWith(':root[')) continue;        // the faces are the kit's
     if (line.startsWith(':root{')) { out.push(`.legacy{${line.slice(6, -1).replace(/color-scheme:[^;}]+;?/, '')}}`); continue; }
+    if (line.startsWith(':root')) continue;                                             // a theme switch: the house is committed dark
     if (line.startsWith('@media')) { const i = line.indexOf('{'), inner = line.slice(i + 1, -1).split('}').filter((r) => r.trim()).map((r) => one(`${r}}`)).filter(Boolean).join(''); if (inner) out.push(`${line.slice(0, i)}{${inner}}`); continue; }
     if (line.startsWith('@')) { out.push(line); continue; }
     const r = one(line); if (r) out.push(r);
@@ -55,7 +75,17 @@ if (process.argv[1] && process.argv[1].endsWith('retrofit.mjs')) {
   const hero = body.match(/<section class="hero" id="top">([\s\S]*?)<\/section>/);
   const ids = { claims: 'claims', glass: 'glass', ...(cfg.ids || {}) };   // the house sections' own names, where the old page already uses the usual ones
   let kept, lead, panels;                                                  // panels: [id, title, html]
-  if (hero) {
+  const top = !hero && cfg.panel ? body.match(/<section id="top">([\s\S]*?)<\/section>/) : null;
+  if (top) {
+    // a plain top section and panels: the top's controls and the glass panel's contents together are the glass
+    const all = [...body.matchAll(/<section class="panel" id="([^"]+)">\s*<h2>([\s\S]*?)<\/h2>([\s\S]*?)<\/section>/g)].map((m) => [m[1], m[2], m[3]]);
+    const live = all.find((p) => p[0] === cfg.panel.glass);
+    if (!live) stop('the old glass was not found');
+    const rest = top[1].replace(/<p class="kicker">[\s\S]*?<\/p>/, '').replace(/<h1>[\s\S]*?<\/h1>/, '').replace(/<p class="lead">[\s\S]*?<\/p>/, '').replace(/<p class="tags">[\s\S]*?<\/p>/, '').trim();
+    kept = `${rest}\n      ${live[2].trim()}`;
+    lead = (top[1].match(/<p class="lead">[\s\S]*?<\/p>/) || [''])[0];
+    panels = all.filter((p) => p !== live).map((p) => [(cfg.panel.rename || {})[p[0]] || p[0], p[1], p[2]]);
+  } else if (hero) {
     kept = hero[1].replace(/<p class="kicker">[\s\S]*?<\/p>/, '').replace(/<h1>[\s\S]*?<\/h1>/, '').replace(/<p class="lead">[\s\S]*?<\/p>/, '').replace(/<p class="tags">[\s\S]*?<\/p>/, '').trim();
     lead = (hero[1].match(/<p class="lead">[\s\S]*?<\/p>/) || [''])[0];
     panels = [...body.matchAll(/<section class="panel" id="([^"]+)">\s*<h2>([\s\S]*?)<\/h2>([\s\S]*?)<\/section>/g)].map((m) => [m[1], m[2], m[3]]);
@@ -73,10 +103,12 @@ if (process.argv[1] && process.argv[1].endsWith('retrofit.mjs')) {
     panels = parts.filter((p) => p !== live);
   }
   if (panels.length === 0) stop('no sections were found');
+  for (const [was, now] of cfg.swap || []) { const i = panels.findIndex((p) => p[2].includes(was)); if (i === -1) stop(`a line to bring up to date was not found: ${was.slice(0, 60)}`); panels[i][2] = panels[i][2].split(was).join(now); }
   const lim = panels.find((p) => p[0] === 'limits');
   const loose = (body.match(/<div id="tip"[\s\S]*?<\/div>/) || [''])[0];
   const foot = (body.match(/<footer>([\s\S]*?)<\/footer>/) || ['', ''])[1].replace(CREDIT, '').replace(/<br>\s*<br>/g, '<br>').trim();
-  const page = `${head}<style>
+  const stack = { kline: 'The claims, written down first', claim: 'The pass marks were fixed <b>before the sealed run.</b>', wait: 'Reading the sealed record.', ...(cfg.stack || {}) };
+  const page = `${head}${cfg.noCredit ? `<meta name="house-exemption" content="credit: ${cfg.noCredit}">\n` : ''}<style>
 /*HOUSE_CSS*/
 /* this build's own styles, for its own content, which now sits behind a click or inside the glass */
 #gem{position:relative;display:block;width:100%;height:min(68vh,560px);touch-action:none;cursor:grab;border-radius:14px;background:#02070c;margin:0 0 16px}
@@ -86,13 +118,13 @@ ${scope(css)}
 </head>
 <body>
 <header class="hero" id="top">
-  <canvas id="crystal" role="img" aria-label="A crystal of 32 faces. Each lit face is one of this build's pre-registered claims: cyan when it passed, red when it failed and is kept."></canvas>
+  <canvas id="crystal" role="img" aria-label="A crystal of 32 faces. ${cfg.crystal || "Each lit face is one of this build's pre-registered claims: cyan when it passed, red when it failed and is kept."}"></canvas>
   <div class="hero-shade"></div>
   <div class="wrap">
     <p class="eyebrow">AI Native Solutions · ${cfg.name}</p>
     <h1>${cfg.h1}</h1>
     <p class="sub">${cfg.sub}</p>
-    <div class="cta"><a class="btn primary" href="#result">See the result →</a><a class="btn ghost" href="#${ids.glass}">Run it yourself</a></div>
+    <div class="cta"><a class="btn primary" href="#result">See the result →</a><a class="btn ghost" href="#${ids.glass}">${cfg.cta || 'Run it yourself'}</a></div>
   </div>
   <p class="facet" id="hsFacet" aria-live="polite">Reading the sealed record.</p>
 </header>
@@ -107,9 +139,9 @@ ${scope(css)}
 
 <section class="pad alt" id="${ids.claims}">
   <div class="wrap">
-    <p class="kline reveal">The claims, written down first</p>
-    <h2 class="claim reveal">The pass marks were fixed <b>before the sealed run.</b></h2>
-    <div class="stack reveal" id="hsClaims">Reading the sealed record.</div>
+    <p class="kline reveal">${stack.kline}</p>
+    <h2 class="claim reveal">${stack.claim}</h2>
+    <div class="stack reveal" id="hsClaims">${stack.wait}</div>
   </div>
 </section>
 
@@ -137,7 +169,7 @@ ${panels.map((p) => `    <details class="honest reveal" id="${p[0]}" style="max-
 
 <footer>
   <div class="wrap frow">
-    <div><div class="brand">${cfg.name}</div><div class="fnote">${foot}<br>${CREDIT}</div></div>
+    <div><div class="brand">${cfg.name}</div><div class="fnote">${foot}${cfg.noCredit ? '' : `<br>${CREDIT}`}</div></div>
     <div class="taglist"><span>›</span> AI you own. Proof you can re-run.<br><span>›</span> A small model that says "I can't tell."<br><span>›</span> Nothing leaves your browser.</div>
   </div>
 </footer>
@@ -147,7 +179,8 @@ ${script}`;
   const baked = (readFileSync(at('scripts/make-page.mjs'), 'utf8').match(/export const BAKED = \[([^\]]*)\]/) || ['', ''])[1].split(',').map((s) => s.trim().replace(/^'|'$/g, '')).filter(Boolean);
   const KEYS = JSON.stringify({ ids: baked, binds: [...new Set([...t.matchAll(/data-bind="([^"]+)"/g)].map((m) => m[1]))] });
   // the house layer: it reads what the page above has already worked out from the sealed run, and shows it the house way
-  writeFileSync(at('page/house-app.js'), `// house-app.js — the house layer. It adds nothing to what this build proves: it waits for the page script above to
+  if (cfg.layer) copyFileSync(join(here, cfg.layer), at('page/house-app.js'));
+  else writeFileSync(at('page/house-app.js'), `// house-app.js — the house layer. It adds nothing to what this build proves: it waits for the page script above to
 // finish, reads what that script worked out from the sealed run (with the house's receipts reader, vendored), and
 // shows it as receipts, a claim stack and a crystal whose lit faces are this build's claims.
 window.__houseLayer = (async () => {

@@ -53,3 +53,17 @@ test('headline: each flagship\'s own sentence, read word for word, or nothing', 
   assert.equal(R.headline('the-seed', climb), null); assert.deepEqual(R.extra('the-climb', climb), []); assert.equal(R.headline('toString', climb), null); assert.deepEqual(R.extra('constructor', climb), []);
   for (const bad of HOSTILE) { assert.equal(R.headline(bad, climb), null); assert.equal(R.headline('the-climb', bad), null); assert.deepEqual(R.extra(bad, crystal), []); assert.deepEqual(R.extra('the-crystal', bad), []); }
 });
+
+test('The Seed states cells, not a before and after: how many it sealed and how many it dissolved, read together', () => {
+  const stat = (n, lab) => `<div class="stat"><div class="n">${n}</div><div class="lab">${lab}</div></div>`;
+  const sealed = stat('<span class="now">3</span><span class="was"> /5</span>', '<b>Cells sealed, of 5 grown.</b> 1 proven by exact arithmetic, 2 grounded in a cited document.');
+  const seed = wrap(sealed + stat('<span class="bad">2</span>', '<b>Cells dissolved.</b> The check did not pass, so they were not kept.'));
+  assert.deepEqual(R.extra('the-seed', seed), [{ key: 'sealed', value: '3', of: 5, label: 'cells the model grew that proved themselves and were sealed' }, { key: 'dissolved', value: '2', of: 5, label: 'cells that could not prove themselves and were dissolved' }]);
+  assert.equal(R.headline('the-seed', seed), null, 'it has no before and after to state');
+  assert.deepEqual(R.extra('the-seed', wrap(sealed + stat('<span class="bad">1</span>', '<b>Cell dissolved.</b> The check did not pass.'))).map((x) => x.value), ['3', '1'], 'one cell is read as well as several');
+  // half of it is not a receipt, and a count out of one number that says it is of another is not read
+  assert.deepEqual(R.extra('the-seed', wrap(sealed)), []);
+  assert.deepEqual(R.extra('the-seed', wrap(stat('<span class="bad">2</span>', '<b>Cells dissolved.</b>'))), []);
+  assert.deepEqual(R.extra('the-seed', wrap(stat('<span class="now">3</span><span class="was"> /5</span>', '<b>Cells sealed, of 6 grown.</b>') + stat('<span class="bad">2</span>', '<b>Cells dissolved.</b>'))), []);
+  assert.deepEqual(R.extra('the-crystal', seed), []); assert.deepEqual(R.extra('the-seed', null), []);
+});

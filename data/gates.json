@@ -1,18 +1,18 @@
 {
  "witness": "v0.6",
- "total": 70,
- "killed": 70,
+ "total": 80,
+ "killed": 80,
  "clean": true,
  "files": {
   "src/standard.mjs": {
-   "total": 44,
-   "killed": 44,
+   "total": 53,
+   "killed": 53,
    "ignored": 0,
    "clean": true
   },
   "src/receipts.mjs": {
-   "total": 11,
-   "killed": 11,
+   "total": 12,
+   "killed": 12,
    "ignored": 0,
    "clean": true
   },

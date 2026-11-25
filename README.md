@@ -10,7 +10,7 @@ away, and is never a wall of text.
 | **7** | rules a built page is held to, by code (`src/standard.mjs`) |
 | **5** | parts every page is built from: crystal hero, receipts, stack, glass, honest expander |
 | **0** | numbers typed by hand on the front door: each is read from the page that proves it |
-| **70 / 70** | planted bugs caught in this repository's own kernels ([the record](data/gates.json)) |
+| **80 / 80** | planted bugs caught in this repository's own kernels ([the record](data/gates.json)) |
 
 ## Use it
 
@@ -29,6 +29,7 @@ node scripts/check.mjs <index.html>  # hold any built page to the standard
 | `src/standard.mjs` | the ship gate: seven rules, one verdict |
 | `src/receipts.mjs`, `src/flagship.mjs` | read each flagship's sealed numbers from its own page |
 | `scaffold/` | what a new build starts from: page, kit, genome cell, seal, gate, CI, page test |
+| `scripts/retrofit.mjs`, `retrofit/` | bring an older build's page up to the standard in place, keeping everything it proves |
 
 <details><summary>The seven rules</summary>
 
@@ -37,10 +38,10 @@ node scripts/check.mjs <index.html>  # hold any built page to the standard
 | H1 | The kit | it has the crystal hero, receipts, a stack, a glass with something to press, an honest expander |
 | H2 | The law of the page | no paragraph over 45 words greets a visitor, and the default view is at most 1,250 words |
 | H3 | Receipts | every receipt carries its source one click away, or says it is still sealing |
-| H4 | Nothing unfinished | no placeholder is on the page |
+| H4 | Nothing unfinished | no placeholder is on the page, and no id is on two elements |
 | H5 | The fail-wall | at least three limits sit behind a click, and a failure or unfinished part is shown as one |
 | H6 | One identity | the committed-dark tokens and the three faces |
-| H7 | House rules | the credit line, no price, no private shorthand |
+| H7 | House rules | the credit line (or the page's own written reason for leaving it off, which the gate shows), no price, no private shorthand |
 
 The gate cannot tell whether a number is true. That is what each build's own seal, mutation gate and records are for.
 It tells whether the page is built the way the standard requires.

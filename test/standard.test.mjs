@@ -7,7 +7,7 @@ const CSS = ":root{--bg:#02070c;--cyan:#49e8c8;--gold:#ffcf6a;--red:#ff6b6b}body
 const stat = (src) => `<div class="stat reveal"><div class="n">31% → 50%</div><div class="lab">right, cold</div>${src}</div>`;
 const SRC = '<a class="src" href="data/verdict.json">receipt ↗</a>';
 // a page that meets the standard; each part can be swapped to break exactly one thing
-const page = (o = {}) => `<!doctype html><html><head><style>${o.css ?? CSS}</style></head><body>
+const page = (o = {}) => `<!doctype html><html><head>${o.head ?? ''}<style>${o.css ?? CSS}</style></head><body>
 <header class="hero">${o.hero ?? '<canvas id="crystal"></canvas>'}<h1>Taught only its own checked work.</h1><p class="sub">A small model.</p></header>
 <section><div class="stats">${o.stats ?? stat(SRC) + stat(SRC)}</div>${o.prose ?? ''}</section>
 <section>${o.stack ?? '<div class="stack"><div class="srow"><div class="d">K1</div><div class="nm"><b>Lift</b><span class="tag cy">pass</span></div></div><div class="srow red"><div class="d">K2</div><div class="nm"><b>Honest</b><span class="tag rd">fail · kept</span></div></div></div>'}</section>
@@ -27,6 +27,7 @@ test('a page built to the standard passes all seven rules, each with what was co
   assert.equal(r.rules[6].why, 'the credit line is on the page; no price; no private shorthand');
   const m = r.measured;
   assert.deepEqual([m.crystal, m.receipts, m.stackRows, m.glass, m.controls, m.expanders, m.limits, m.sourced, m.unfinished, m.shown, m.tokens, m.faces, m.credit, m.priced, m.shorthand], [true, 2, 2, 1, 1, 1, 3, 2, 0, true, 4, 3, true, false, false]);
+  assert.deepEqual([m.clashes, m.exempt], [[], '']);
   assert.ok(m.viewWords > 0 && m.viewWords < m.allWords, 'what is behind a click is not counted as greeting the visitor');
   assert.deepEqual(S.LIMITS, { paragraph: 45, view: 1250, limits: 3 });
 });
@@ -78,10 +79,23 @@ test('H3 receipts: every one carries its source, or says it is still sealing', (
 });
 
 test('H4 nothing unfinished: no placeholder, and nothing left unmeasured', () => {
-  for (const bad of ['not measured yet', 'Lorem ipsum dolor', 'Coming soon', 'TODO', 'TBD']) assert.equal(only(page({ prose: `<p>${bad}</p>` }), 'H4'), '1 placeholders on the page', bad);
+  for (const bad of ['not measured yet', 'Lorem ipsum dolor', 'Coming soon', 'TODO', 'TBD']) assert.equal(only(page({ prose: `<p>${bad}</p>` }), 'H4'), '1 placeholders on the page; no id used twice', bad);
   assert.equal(rule(page({ prose: '<p>mastodon and todo-list are words</p>' }), 'H4').pass, false, 'todo in any case is caught');
   assert.equal(rule(page({ prose: '<p>the photodiode is tbdless</p>' }), 'H4').pass, true, 'inside a longer word it is not a placeholder');
   assert.equal(rule(page(), 'H4').pass, true, 'a placeholder string inside the script is the script\'s own business');
+  assert.equal(rule(page(), 'H4').why, 'no placeholder on the page; no id used twice');
+});
+
+test('H4 nothing unfinished: an id belongs to one element', () => {
+  // a script that asks for an id two elements share is handed the first of them, and writes over the wrong part
+  assert.equal(only(page({ prose: '<section id="built"><h2>How it is built</h2><div id="built">the table</div></section>' }), 'H4'), 'no placeholder on the page; used as an id by more than one element: built');
+  assert.equal(only(page({ prose: '<p id="a">1</p><p id="b">2</p><p id="a">3</p><p id="b">4</p><p id="a">5</p>' }), 'H4'), 'no placeholder on the page; used as an id by more than one element: a, b');
+  assert.deepEqual(S.measure(page({ prose: '<p id="a">1</p><p id="b">2</p>' })).clashes, [], 'ids used once each are not a clash');
+  assert.equal(rule(page({ prose: '<p id="a">1</p><p id="b">2</p>' }), 'H4').pass, true);
+  assert.equal(only(page({ prose: '<p id="crystal">the hero has this id already</p>' }), 'H4'), 'no placeholder on the page; used as an id by more than one element: crystal');
+  // another attribute that ends in "id", and an id written inside a script, are not ids of the page
+  assert.equal(rule(page({ prose: '<p data-id="a">1</p><p data-id="a">2</p><script>const t = \'<p id="go">\';</script>' }), 'H4').pass, true);
+  assert.match(rule(page({ prose: '<p id="a">TODO</p><p id="a">2</p>' }), 'H4').why, /^1 placeholders on the page; used as an id by more than one element: a$/);
 });
 
 test('H5 the fail-wall: limits behind a click, and a failure or an unfinished part shown as one', () => {
@@ -101,12 +115,21 @@ test('H6 one identity and H7 house rules', () => {
   assert.equal(only(page({ css: CSS.replace('Fraunces', 'Georgia') }), 'H6'), '4 of 4 house colours, 2 of 3 house faces');
   assert.equal(rule(page({ css: CSS.toUpperCase().replace('FRAUNCES', 'Fraunces').replace('HANKEN GROTESK', 'Hanken Grotesk').replace('JETBRAINS MONO', 'JetBrains Mono') }), 'H6').pass, true, 'a colour is the same colour in capitals');
   assert.equal(only(page({ footer: 'no credit' }), 'H7'), 'the credit line is missing; no price; no private shorthand');
+  // the credit line may be left off only with a reason written in the page's own head, and the reason is shown
+  const why = 'left off on the owner\'s instruction for this build', meta = (c) => `<meta name="house-exemption" content="${c}">`;
+  const let1 = S.check(page({ footer: 'no credit', head: meta(`credit: ${why}`) }));
+  assert.equal(let1.pass, true); assert.equal(let1.rules[6].why, `the credit line is left off, and the page says why: ${why}; no price; no private shorthand`);
+  assert.equal(let1.measured.exempt, why); assert.equal(let1.measured.credit, false); assert.equal(S.measure(page()).exempt, '');
+  for (const thin of [meta('credit: because'), meta('credit: 1234567890123456789'), meta(`price: ${why}`), meta(why), `<meta name="other" content="credit: ${why}">`, '']) assert.equal(only(page({ footer: 'no credit', head: thin }), 'H7'), 'the credit line is missing; no price; no private shorthand', thin);
+  assert.equal(rule(page({ footer: 'no credit', head: meta('credit: 12345678901234567890') }), 'H7').pass, true, 'twenty characters is the shortest reason');
+  assert.equal(rule(page({ head: meta(`credit: ${why}`) }), 'H7').why, 'the credit line is on the page; no price; no private shorthand', 'a page that carries the line needs no reason');
+  assert.match(only(page({ footer: 'no credit', head: meta(`credit: ${why}`), prose: '<p>£49 a month</p>' }), 'H7'), /a price is on the page/, 'the reason excuses the credit line and nothing else');
   // a price of our own: an amount for a seat, a user or a period, or the words of a price list
   for (const price of ['£49 a month', '$ 9 per seat', '€5/user', '$12 per month', '£1,200.50 a year', '$99 each licence', '€3/mo', 'Our pricing', 'Pricing plans', 'Buy now', 'Subscribe now', 'the price list']) assert.match(only(page({ prose: `<p>${price}</p>` }), 'H7'), /a price is on the page/, price);
   // what others charge, set out with its source, is a comparison a buyer's page must carry: not a price of ours
   for (const fair of ['claude-opus ($4 in, $20 out per million tokens) $2.30 per 1,000 problems, claude.com/pricing, read 2026-11-09', 'Your own hardware: $0, no meter', 'no charge per seat, per user or per month', 'the monthly bill', '$5 million was raised', 'a year of work, £0']) assert.equal(rule(page({ prose: `<p>${fair}</p>` }), 'H7').pass, true, fair);
   const word = ['to', 'rus'].join('');
-  for (const sign of ['κ', 'φ', '◊', `a ${word} of light`, `A ${word.toUpperCase()}.`]) assert.match(only(page({ prose: `<p>${sign}</p>` }), 'H7'), /private shorthand is on the page$/, sign);
+  for (const sign of ['\u03ba', '\u03c6', '\u25ca', `a ${word} of light`, `A ${word.toUpperCase()}.`]) assert.match(only(page({ prose: `<p>${sign}</p>` }), 'H7'), /private shorthand is on the page$/, sign);
   assert.equal(rule(page({ prose: `<p>the history of s${word}, and ${word}es</p>` }), 'H7').pass, true, 'inside a longer word it is another word');
   assert.equal(rule(page({ prose: '<p>λ and π are other letters</p>' }), 'H7').pass, true);
 });
