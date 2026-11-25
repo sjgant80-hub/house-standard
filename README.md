@@ -10,13 +10,14 @@ away, and is never a wall of text.
 | **7** | rules a built page is held to, by code (`src/standard.mjs`) |
 | **5** | parts every page is built from: crystal hero, receipts, stack, glass, honest expander |
 | **0** | numbers typed by hand on the front door: each is read from the page that proves it |
-| **80 / 80** | planted bugs caught in this repository's own kernels ([the record](data/gates.json)) |
+| **113 / 113** | planted bugs caught in this repository's own kernels ([the record](data/gates.json)) |
 
 ## Use it
 
 ```
 node scripts/new.mjs <name>          # a new build, opening like the showcase and carrying the organ
 node scripts/check.mjs <index.html>  # hold any built page to the standard
+node scripts/read.mjs <index.html>   # can a twelve-year-old read it? school year, long words, trade words
 ```
 
 ## What is in here
@@ -27,6 +28,7 @@ node scripts/check.mjs <index.html>  # hold any built page to the standard
 | `kit/crystal.js` | the hero: a 32-faced crystal ray-traced in one shader, each face bound to a receipt |
 | `kit/house.js` | the motion: rising in, numbers running up, light under the pointer |
 | `src/standard.mjs` | the ship gate: seven rules, one verdict |
+| `src/plain.mjs` | the reading-age check: the school year a page needs, its long words, its trade words |
 | `src/receipts.mjs`, `src/flagship.mjs` | read each flagship's sealed numbers from its own page |
 | `scaffold/` | what a new build starts from: page, kit, genome cell, seal, gate, CI, page test |
 | `scripts/retrofit.mjs`, `retrofit/` | bring an older build's page up to the standard in place, keeping everything it proves |

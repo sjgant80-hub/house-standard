@@ -9,6 +9,7 @@ export const GATED = [
   ['src/standard.mjs', ['test/standard.test.mjs']],
   ['src/receipts.mjs', ['test/receipts.test.mjs']],
   ['src/flagship.mjs', ['test/flagship.test.mjs']],
+  ['src/plain.mjs', ['test/plain.test.mjs']],
   ['genome/cell.mjs', ['test/genome.test.mjs']],
 ];
 export const NOTHING_TO_MUTATE = {
