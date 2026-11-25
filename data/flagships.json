@@ -8,7 +8,7 @@
    "verb": "It climbs.",
    "line": "A problem it fails cold, broken into steps it can do. Each step checked.",
    "live": "https://sjgant80-hub.github.io/the-climb/",
-   "commit": "e321ca8f106a241e697ff6ad876a7493fe55bad6",
+   "commit": "0f048b3bd8dd2c41272e33bde651bed99e93393a",
    "headline": {
     "was": "36.5%",
     "now": "70.8%",
@@ -29,22 +29,22 @@
     ]
    },
    "standard": {
-    "pass": false,
+    "pass": true,
     "rules": [
      {
       "id": "H1",
-      "pass": false,
-      "why": "missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander"
+      "pass": true,
+      "why": "crystal hero, 2 receipts, 8 stack rows, 6 controls on the glass, 11 expanders"
      },
      {
       "id": "H2",
-      "pass": false,
-      "why": "6347 words before any click (at most 1250); the longest paragraph is 272 words (at most 45)"
+      "pass": true,
+      "why": "538 words before any click (at most 1250); the longest paragraph is 26 words (at most 45)"
      },
      {
       "id": "H3",
-      "pass": false,
-      "why": "0 of 0 receipts carry their source, or say they are still sealing"
+      "pass": true,
+      "why": "2 of 2 receipts carry their source, or say they are still sealing"
      },
      {
       "id": "H4",
@@ -53,22 +53,22 @@
      },
      {
       "id": "H5",
-      "pass": false,
-      "why": "0 limits behind a click (at least 3); a failure or an unfinished part is shown as one"
+      "pass": true,
+      "why": "39 limits behind a click (at least 3); a failure or an unfinished part is shown as one"
      },
      {
       "id": "H6",
-      "pass": false,
-      "why": "0 of 4 house colours, 0 of 3 house faces"
+      "pass": true,
+      "why": "4 of 4 house colours, 3 of 3 house faces"
      },
      {
       "id": "H7",
-      "pass": false,
-      "why": "the credit line is on the page; a price is on the page; no private shorthand"
+      "pass": true,
+      "why": "the credit line is on the page; no price; no private shorthand"
      }
     ],
-    "viewWords": 6347,
-    "longest": 272
+    "viewWords": 538,
+    "longest": 26
    },
    "gate": {
     "killed": 601,
@@ -82,7 +82,7 @@
    "verb": "It crystallises.",
    "line": "The answer grown from proven pieces. What cannot be proven dissolves.",
    "live": "https://sjgant80-hub.github.io/the-crystal/",
-   "commit": "e1ef61b378f129afb90309c4c25926561fc7b7d4",
+   "commit": "1220ae1b2d8dd0b3d29c904270462054210c827f",
    "headline": {
     "was": "31.0%",
     "now": "85.7%",
@@ -158,7 +158,7 @@
    "verb": "It refuses to lie.",
    "line": "Checked against the arithmetic or the cited source, or not released.",
    "live": "https://sjgant80-hub.github.io/the-verifier-set/",
-   "commit": "f3277191540bb7ed71e182c67a39de79effec0e5",
+   "commit": "bc851d5e7f990232d40e2e073cc1e5bcab121910",
    "headline": {
     "was": "34",
     "now": "139",
@@ -299,7 +299,7 @@
    "verb": "It learns.",
    "line": "Trained only on its own verified work. Tested cold on problems it never saw.",
    "live": "https://sjgant80-hub.github.io/the-distillation/",
-   "commit": "fd632b930bbe0dcc3c5f0c715f687a455bbf69e4",
+   "commit": "1ac0af80d2ad0eeba4cbe929034bdc4d201f149c",
    "headline": null,
    "extra": [],
    "claims": {
@@ -378,10 +378,10 @@
   "round": 1,
   "stage": "harvest",
   "harvest": {
-   "done": 90,
+   "done": 130,
    "total": 573,
-   "complete": 89,
-   "calls": 623
+   "complete": 129,
+   "calls": 886
   },
   "train": null,
   "cold": {
@@ -391,7 +391,7 @@
   "verdict": null,
   "done": false,
   "failed": false,
-  "at": "2026-11-25T22:25:36.865Z"
+  "at": "2026-11-25T22:32:40.801Z"
  },
  "gate": {
   "killed": 70,

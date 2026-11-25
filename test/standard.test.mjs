@@ -101,8 +101,10 @@ test('H6 one identity and H7 house rules', () => {
   assert.equal(only(page({ css: CSS.replace('Fraunces', 'Georgia') }), 'H6'), '4 of 4 house colours, 2 of 3 house faces');
   assert.equal(rule(page({ css: CSS.toUpperCase().replace('FRAUNCES', 'Fraunces').replace('HANKEN GROTESK', 'Hanken Grotesk').replace('JETBRAINS MONO', 'JetBrains Mono') }), 'H6').pass, true, 'a colour is the same colour in capitals');
   assert.equal(only(page({ footer: 'no credit' }), 'H7'), 'the credit line is missing; no price; no private shorthand');
-  for (const price of ['£49 a month', '$ 9', '€5', 'per seat', 'per user', 'per month', 'Pricing']) assert.match(only(page({ prose: `<p>${price}</p>` }), 'H7'), /a price is on the page/, price);
-  assert.equal(rule(page({ prose: '<p>no charge at all, on the machine you own</p>' }), 'H7').pass, true);
+  // a price of our own: an amount for a seat, a user or a period, or the words of a price list
+  for (const price of ['£49 a month', '$ 9 per seat', '€5/user', '$12 per month', '£1,200.50 a year', '$99 each licence', '€3/mo', 'Our pricing', 'Pricing plans', 'Buy now', 'Subscribe now', 'the price list']) assert.match(only(page({ prose: `<p>${price}</p>` }), 'H7'), /a price is on the page/, price);
+  // what others charge, set out with its source, is a comparison a buyer's page must carry: not a price of ours
+  for (const fair of ['claude-opus ($4 in, $20 out per million tokens) $2.30 per 1,000 problems, claude.com/pricing, read 2026-11-09', 'Your own hardware: $0, no meter', 'no charge per seat, per user or per month', 'the monthly bill', '$5 million was raised', 'a year of work, £0']) assert.equal(rule(page({ prose: `<p>${fair}</p>` }), 'H7').pass, true, fair);
   const word = ['to', 'rus'].join('');
   for (const sign of ['κ', 'φ', '◊', `a ${word} of light`, `A ${word.toUpperCase()}.`]) assert.match(only(page({ prose: `<p>${sign}</p>` }), 'H7'), /private shorthand is on the page$/, sign);
   assert.equal(rule(page({ prose: `<p>the history of s${word}, and ${word}es</p>` }), 'H7').pass, true, 'inside a longer word it is another word');

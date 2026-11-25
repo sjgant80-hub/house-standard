@@ -16,6 +16,9 @@ export const LIMITS = { paragraph: 45, view: 1250, limits: 3 };
 export const NAMES = { H1: 'The kit', H2: 'The law of the page', H3: 'Receipts', H4: 'Nothing unfinished', H5: 'The fail-wall', H6: 'One identity', H7: 'House rules' };
 const TOKENS = ['#02070c', '#49e8c8', '#ffcf6a', '#ff6b6b'], FACES = ['Fraunces', 'Hanken Grotesk', 'JetBrains Mono'];
 const CREDIT = 'Powered by the Konomi architecture, created by Thomas Frumkin.';
+// a price of our own: an amount for a seat, a user or a period, or the words of a price list. What others charge,
+// set out with its source, is not this: a buyer's page is required to carry that comparison.
+const PRICED = /[£$€]\s?\d[\d,.]*\s*(?:\/|per|a|each)\s*(?:seat|user|month|mo\b|year|yr\b|licen[cs]e)|\b(?:buy now|subscribe now|pricing plans?|our pricing|price list)\b/i;
 // three signs and one word that stay off public pages, written here so that this file does not carry them either
 const SHORTHAND = new RegExp(`[\\u03ba\\u03c6\\u25ca]|\\b${['to', 'rus'].join('')}\\b`, 'i');
 
@@ -59,7 +62,7 @@ export function measure(html) {
     unfinished: count(strip(b), /not measured yet|lorem ipsum|coming soon|\bTODO\b|\bTBD\b/gi),
     shown: /class="[^"]*\b(tag rd|fail|bad)\b/.test(b) || /sealing now/i.test(b),
     tokens: TOKENS.filter((t) => page.toLowerCase().includes(t)).length, faces: FACES.filter((f) => page.includes(f)).length,
-    credit: b.includes(CREDIT), priced: /[£$€]\s?\d|\bper (seat|user|month)\b|\bpricing\b/i.test(strip(b)), shorthand: SHORTHAND.test(b),
+    credit: b.includes(CREDIT), priced: PRICED.test(strip(b)), shorthand: SHORTHAND.test(b),
   };
 }
 

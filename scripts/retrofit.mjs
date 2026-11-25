@@ -18,7 +18,10 @@ export const BUILDS = {
     limits: ['<b>Grounded is not true.</b> A cited figure is as true as its document. It is labelled grounded, never proven.', '<b>Narrow on purpose.</b> Figures, rules, simple claims and sums. Where no check can say yes, there is no answer.', '<b>One sealed run.</b> One model, problems made by code. It says nothing about messy documents.'] },
   'the-crystal': { name: 'The Crystal', ready: '__crystal', h1: 'It <em>crystallises.</em>', sub: 'The answer is grown from proven pieces, in parallel. What cannot be proven dissolves.', claim: 'One try, against a crystal grown one checked step at a time. <b>Same model, same weights.</b>', glass: 'Grow one on your own graphics chip, or play the sealed record. Nothing leaves your browser.', receipt: 'data/runs/sealed.json',
     limits: ['<b>The reach of the check.</b> The only check is exact arithmetic. Nothing else can bond.', '<b>The model did not get smarter.</b> It is the same small model at the last facet as at the first.', '<b>One sealed run.</b> Problems made by code. An attack that found no leak is evidence, not a proof.'] },
-  'the-climb': { name: 'The Climb', ready: '__climb', h1: 'It <em>climbs.</em>', sub: 'A problem it fails cold, broken into steps it can do. Each step is checked before the next.', claim: 'One try, against the climb. <b>Same model, same weights.</b>', glass: 'Run the climb on your own graphics chip, or replay the sealed record. Nothing leaves your browser.', receipt: 'data/runs/sealed.json',
+  'the-climb': { name: 'The Climb', ready: '__climb', ids: { claims: 'verdicts', glass: 'live' }, compose: [['right at the first try', 'hl.cold'], ['right after the climb', 'hl.climb']],
+    // its page is flat; its glass is the "live" section. The light theme is retired (the house is committed dark): its
+    // button stays in the markup, hidden, so the unchanged page script still finds it. A price is not put on a page.
+    flat: { glass: 'live', keep: '<button id="theme" type="button" hidden>Theme</button>', drop: ['  <span class="chip">charge per problem <b>$0</b> <span class="muted">(one model download, then your own hardware)</span></span>\n'] }, h1: 'It <em>climbs.</em>', sub: 'A problem it fails cold, broken into steps it can do. Each step is checked before the next.', claim: 'One try, against the climb. <b>Same model, same weights.</b>', glass: 'Run the climb on your own graphics chip, or replay the sealed record. Nothing leaves your browser.', receipt: 'data/runs/sealed.json',
     limits: ['<b>A claim failed, and stays.</b> Not every pre-registered claim passed. The one that did not is in the stack above, in red.', '<b>The reach of the check.</b> Exact arithmetic only. Where it cannot check, it gives no answer.', '<b>One sealed run.</b> One model, problems made by code.'] },
 };
 
@@ -26,10 +29,12 @@ const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 // scope(css) → the old page's own styles, kept for its own content only: every rule sits under .legacy, the old
 // colours become .legacy's own, and the rules for parts the house now provides (page, header, hero, footer) go.
 export function scope(css) {
-  const out = [], gone = /^(\*|html|body|main|footer|#gem|\.top|\.hero|\.mark|section\.panel|h1)([\s{>,:. ]|$)/;
+  const out = [], gone = /^(\*|html|body|main|footer|nav|#gem|\.top|\.hero|\.mark|section\.panel|h1)([\s{>,:. ]|$)/;
   const one = (rule) => { const i = rule.indexOf('{'); if (i < 0) return ''; const sels = rule.slice(0, i).split(',').map((s) => s.trim()).filter((s) => s && !gone.test(s)); return sels.length ? `${sels.map((s) => (s.startsWith('#') ? s : `.legacy ${s}`)).join(',')}${rule.slice(i)}` : ''; };
   for (const line of css.split('\n').map((l) => l.trim()).filter(Boolean)) {
-    if (line.startsWith('@font-face')) continue;
+    // the house is committed dark: where the old page had a dark theme of its own, those are its colours now
+    if (/^:root\[data-theme="?dark"?\]\{/.test(line)) { out.push(`.legacy{${line.slice(line.indexOf('{') + 1, -1).replace(/color-scheme:[^;}]+;?/, '')}}`); continue; }
+    if (line.startsWith('@font-face') || line.startsWith(':root[')) continue;        // the faces are the kit's
     if (line.startsWith(':root{')) { out.push(`.legacy{${line.slice(6, -1).replace(/color-scheme:[^;}]+;?/, '')}}`); continue; }
     if (line.startsWith('@media')) { const i = line.indexOf('{'), inner = line.slice(i + 1, -1).split('}').filter((r) => r.trim()).map((r) => one(`${r}}`)).filter(Boolean).join(''); if (inner) out.push(`${line.slice(0, i)}{${inner}}`); continue; }
     if (line.startsWith('@')) { out.push(line); continue; }
@@ -48,18 +53,34 @@ if (process.argv[1] && process.argv[1].endsWith('retrofit.mjs')) {
   const body = t.slice(t.indexOf('<body>') + 6, t.indexOf('<script type="module">')), script = t.slice(t.indexOf('<script type="module">'));
   const canvas = (body.match(/<canvas id="gem"[\s\S]*?<\/canvas>/) || [''])[0];
   const hero = body.match(/<section class="hero" id="top">([\s\S]*?)<\/section>/);
-  if (!hero) stop('the old hero was not found');
-  const kept = hero[1].replace(/<p class="kicker">[\s\S]*?<\/p>/, '').replace(/<h1>[\s\S]*?<\/h1>/, '').replace(/<p class="lead">[\s\S]*?<\/p>/, '').replace(/<p class="tags">[\s\S]*?<\/p>/, '').trim();
-  const lead = (hero[1].match(/<p class="lead">[\s\S]*?<\/p>/) || [''])[0];
-  const panels = [...body.matchAll(/<section class="panel" id="([^"]+)">\s*<h2>([\s\S]*?)<\/h2>([\s\S]*?)<\/section>/g)];
+  const ids = { claims: 'claims', glass: 'glass', ...(cfg.ids || {}) };   // the house sections' own names, where the old page already uses the usual ones
+  let kept, lead, panels;                                                  // panels: [id, title, html]
+  if (hero) {
+    kept = hero[1].replace(/<p class="kicker">[\s\S]*?<\/p>/, '').replace(/<h1>[\s\S]*?<\/h1>/, '').replace(/<p class="lead">[\s\S]*?<\/p>/, '').replace(/<p class="tags">[\s\S]*?<\/p>/, '').trim();
+    lead = (hero[1].match(/<p class="lead">[\s\S]*?<\/p>/) || [''])[0];
+    panels = [...body.matchAll(/<section class="panel" id="([^"]+)">\s*<h2>([\s\S]*?)<\/h2>([\s\S]*?)<\/section>/g)].map((m) => [m[1], m[2], m[3]]);
+  } else {
+    // a flat page: one <main>, its sections marked only by <h2 id="…">. One of them is its glass.
+    const main = body.slice(body.indexOf('<main'), body.indexOf('<footer')), first = main.indexOf('<h2 ');
+    if (!cfg.flat || first === -1) stop('the old hero was not found');
+    const intro = main.slice(main.indexOf('>') + 1, first).replace(/<h1>[\s\S]*?<\/h1>/, '');
+    const parts = main.slice(first).split(/(?=<h2 id=")/).map((p) => p.match(/^<h2 id="([^"]+)">([\s\S]*?)<\/h2>([\s\S]*)$/)).filter(Boolean).map((m) => [m[1], m[2], m[3].trim()]);
+    const live = parts.find((p) => p[0] === cfg.flat.glass);
+    if (!live) stop('the old glass was not found');
+    const say = (live[2].match(/^<p>[\s\S]*?<\/p>/) || [''])[0];
+    kept = `${live[2].slice(say.length).trim()}\n      ${cfg.flat.keep || ''}`;
+    lead = `${(cfg.flat.drop || []).reduce((s, x) => s.split(x).join(''), intro).trim()}\n${say}`;
+    panels = parts.filter((p) => p !== live);
+  }
   if (panels.length === 0) stop('no sections were found');
+  const lim = panels.find((p) => p[0] === 'limits');
   const loose = (body.match(/<div id="tip"[\s\S]*?<\/div>/) || [''])[0];
   const foot = (body.match(/<footer>([\s\S]*?)<\/footer>/) || ['', ''])[1].replace(CREDIT, '').replace(/<br>\s*<br>/g, '<br>').trim();
   const page = `${head}<style>
 /*HOUSE_CSS*/
 /* this build's own styles, for its own content, which now sits behind a click or inside the glass */
 #gem{position:relative;display:block;width:100%;height:min(68vh,560px);touch-action:none;cursor:grab;border-radius:14px;background:#02070c;margin:0 0 16px}
-.legacy{font-size:15px;line-height:1.6}
+.legacy{font-size:15px;line-height:1.6;color:var(--ink)}
 ${scope(css)}
 </style>
 </head>
@@ -71,7 +92,7 @@ ${scope(css)}
     <p class="eyebrow">AI Native Solutions · ${cfg.name}</p>
     <h1>${cfg.h1}</h1>
     <p class="sub">${cfg.sub}</p>
-    <div class="cta"><a class="btn primary" href="#result">See the result →</a><a class="btn ghost" href="#glass">Run it yourself</a></div>
+    <div class="cta"><a class="btn primary" href="#result">See the result →</a><a class="btn ghost" href="#${ids.glass}">Run it yourself</a></div>
   </div>
   <p class="facet" id="hsFacet" aria-live="polite">Reading the sealed record.</p>
 </header>
@@ -84,7 +105,7 @@ ${scope(css)}
   </div>
 </section>
 
-<section class="pad alt" id="claims">
+<section class="pad alt" id="${ids.claims}">
   <div class="wrap">
     <p class="kline reveal">The claims, written down first</p>
     <h2 class="claim reveal">The pass marks were fixed <b>before the sealed run.</b></h2>
@@ -92,7 +113,7 @@ ${scope(css)}
   </div>
 </section>
 
-<section class="pad proof" id="glass">
+<section class="pad proof" id="${ids.glass}">
   <div class="wrap">
     <h2 class="hl reveal"><span class="a">Don't trust us.</span><br><span class="b">Re-run it.</span></h2>
     <p class="sub2 reveal">${cfg.glass}</p>
@@ -101,7 +122,7 @@ ${scope(css)}
       ${kept}
     </div>
     ${loose}
-    <details class="honest reveal"><summary>What this does — and doesn't — claim</summary><div class="in">${cfg.limits.map((l) => `<p>${l}</p>`).join('')}<p>The full list is below, under "${strip((panels.find((p) => p[1] === 'limits') || panels[0])[2])}".</p></div></details>
+    <details class="honest reveal"><summary>What this does — and doesn't — claim</summary><div class="in">${cfg.limits.map((l) => `<p>${l}</p>`).join('')}${lim ? `<p>The full list is below, under "${strip(lim[1])}".</p>` : ''}</div></details>
   </div>
 </section>
 
@@ -110,7 +131,7 @@ ${scope(css)}
     <p class="kline reveal">Everything, in full</p>
     <h2 class="claim reveal">Every detail is still here. <b>One click away.</b></h2>
     ${lead ? `<details class="honest reveal" style="max-width:none"><summary>What it is, in one paragraph</summary><div class="in legacy">${lead}</div></details>` : ''}
-${panels.map((p) => `    <details class="honest reveal" id="${p[1]}" style="max-width:none"><summary>${strip(p[2])}</summary><div class="in legacy">${p[3].trim()}</div></details>`).join('\n')}
+${panels.map((p) => `    <details class="honest reveal" id="${p[0]}" style="max-width:none"><summary>${strip(p[1])}</summary><div class="in legacy">${p[2].trim()}</div></details>`).join('\n')}
   </div>
 </section>
 
@@ -134,7 +155,9 @@ window.__houseLayer = (async () => {
   const KEYS = ${KEYS};
   const el = (id) => document.getElementById(id), safe = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const drawn = [...KEYS.ids.map((id) => el(id)), ...KEYS.binds.flatMap((k) => [...document.querySelectorAll(\`[data-bind="\${k}"]\`)])].map((e) => (e && typeof e.innerHTML === 'string' ? e.innerHTML : '')).join(' ');
-  const html = \`<body>\${drawn}</body>\`, claims = RECEIPTS.claims(html), head = RECEIPTS.headline('${repo}', html), more = RECEIPTS.extra('${repo}', html);
+  // where the old page writes a number beside its label, the two are read together, as a visitor reads them
+  const said = ${JSON.stringify(cfg.compose || [])}.map(([words, k]) => \`\${words} \${[...document.querySelectorAll(\`[data-bind="\${k}"]\`)].map((e) => e.innerHTML).join(' ')}\`).join(' ');
+  const html = \`<body>\${drawn} \${said}</body>\`, claims = RECEIPTS.claims(html), head = RECEIPTS.headline('${repo}', html), more = RECEIPTS.extra('${repo}', html);
   const src = '<a class="src" href="${cfg.receipt}">receipt: the sealed run ↗</a>', passed = claims.filter((c) => c.pass === true).length, failed = claims.filter((c) => c.pass === false);
   const stats = [];
   if (head) stats.push(\`<div class="stat reveal"><div class="n"><span class="was">\${safe(head.was)}</span><span class="arrow">→</span><span class="now">\${safe(head.now)}</span></div><div class="lab"><b>Of \${head.of} sealed problems.</b> \${safe(head.label[0].toUpperCase() + head.label.slice(1))}.</div>\${src}</div>\`);
@@ -148,7 +171,7 @@ window.__houseLayer = (async () => {
   if (crystal) {
     crystal.setFaces(Array.from({ length: 32 }, (_, i) => (claims[i] ? (claims[i].pass === true ? 1 : claims[i].pass === false ? 3 : 2) : 0)));
     crystal.onHover((i) => { const c = claims[i]; el('hsFacet').innerHTML = c ? \`<b>\${c.id} \${safe(c.name)}</b> · \${c.pass === true ? 'pass' : c.pass === false ? 'FAIL, kept' : 'sealing now'} · \${safe(c.result)}\` : rest; });
-    crystal.onPick(() => { const s = el('claims'); if (s && s.scrollIntoView) s.scrollIntoView({ behavior: 'smooth' }); });
+    crystal.onPick(() => { const s = el('${ids.claims}'); if (s && s.scrollIntoView) s.scrollIntoView({ behavior: 'smooth' }); });
     HOUSE.bindScroll(crystal, 0.9);
   }
   HOUSE.reveal(document); HOUSE.light(document);
