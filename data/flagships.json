@@ -235,7 +235,7 @@
    "verb": "It grows itself.",
    "line": "A handful of files that grows verified software, one cell at a time.",
    "live": "https://sjgant80-hub.github.io/the-seed/",
-   "commit": "ae53731e9cd537c8ed52e488e4921551fbd19c23",
+   "commit": "859205260e4a3c5e42d7a2cf3b4f0aaee8c77eea",
    "headline": null,
    "extra": [
     {
@@ -269,7 +269,7 @@
      {
       "id": "H2",
       "pass": true,
-      "why": "565 words before any click (at most 1250); the longest paragraph is 28 words (at most 45)"
+      "why": "574 words before any click (at most 1250); the longest paragraph is 28 words (at most 45)"
      },
      {
       "id": "H3",
@@ -294,10 +294,10 @@
      {
       "id": "H7",
       "pass": true,
-      "why": "the credit line is left off, and the page says why: left off on the owner's instruction for this build, until he rules on it; no price; no private shorthand"
+      "why": "the credit line is on the page; no price; no private shorthand"
      }
     ],
-    "viewWords": 565,
+    "viewWords": 574,
     "longest": 28
    },
    "gate": {
@@ -312,7 +312,7 @@
    "verb": "It learns.",
    "line": "Trained only on its own verified work. Tested cold on problems it never saw.",
    "live": "https://sjgant80-hub.github.io/the-distillation/",
-   "commit": "bae43fcb3c9898a58c0d87dc4348f10d832fc767",
+   "commit": "d5654acde998b788df59ff2ce2bb230551d544ec",
    "headline": null,
    "extra": [],
    "claims": {
@@ -391,10 +391,10 @@
   "round": 1,
   "stage": "harvest",
   "harvest": {
-   "done": 300,
+   "done": 480,
    "total": 573,
-   "complete": 296,
-   "calls": 2297
+   "complete": 465,
+   "calls": 3897
   },
   "train": null,
   "cold": {
@@ -404,11 +404,11 @@
   "verdict": null,
   "done": false,
   "failed": false,
-  "at": "2026-11-25T22:53:51.377Z"
+  "at": "2026-11-25T23:51:22.727Z"
  },
  "gate": {
-  "killed": 80,
-  "total": 80,
+  "killed": 113,
+  "total": 113,
   "clean": true
  }
 }
