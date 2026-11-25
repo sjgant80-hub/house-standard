@@ -1,9 +1,12 @@
 {
- "v": "house-standard-estate/1",
+ "v": "house-standard-estate/2",
  "indexed": "2026-11-22",
+ "read": "2026-11-25",
  "org": "sjgant80-hub",
  "public": 1784,
- "live": 1586,
+ "asked": 1606,
+ "live": 647,
+ "onStandard": 0,
  "shelf": [
   {
    "row": "Proof",
