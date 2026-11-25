@@ -66,4 +66,5 @@ test('the scaffold is whole, and what it makes carries the kit this repository s
   const t = read('scaffold/page/template.html');
   for (const part of ['<canvas id="crystal"', 'class="stats"', 'class="stack ', 'class="glass ', '<details class="honest ']) assert.ok(t.includes(part), `the scaffold's page has no ${part}`);
   assert.ok(read('README.md').startsWith('**Live: https://sjgant80-hub.github.io/house-standard/**'));
+  const g = JSON.parse(read('data/gates.json')); assert.equal(g.clean, true); assert.ok(read('README.md').includes('**' + g.killed + ' / ' + g.total + '**'), 'the README states the gate as the record has it');
 });
