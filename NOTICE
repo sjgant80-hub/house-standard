@@ -1,0 +1,10 @@
+The house standard: code under the MIT licence (LICENSE), copyright Simon Gant.
+
+- genome/io.mjs, judge.mjs, lane.mjs, health.mjs and tombstone.mjs are the estate genome's hook template
+  (sjgant80-hub/estate-genome), MIT, copyright Simon Gant, byte for byte.
+- vendor/fonts/ holds Fraunces, Hanken Grotesk and JetBrains Mono (variable, latin), each under the SIL Open Font
+  Licence 1.1; each folder carries its licence. They are served from the page so that no font host is called.
+- kit/crystal.js draws the crystal in plain WebGL. No graphics library is fetched or bundled.
+- The numbers on the front door are read from the flagship repositories' own published pages
+  (the-climb, the-crystal, the-verifier-set, the-seed, the-distillation), each at the commit recorded in
+  data/flagships.json.

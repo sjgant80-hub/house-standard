@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI you own. Proof you can re-run.</title>
+<meta name="description" content="A small AI that gives you an answer, or admits it can't. It runs on your own machine. Every number on this page is read live from the sealed page that proves it, and every build can be re-run in your browser.">
+<meta name="theme-color" content="#02070c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+/* house.css — the AI Native house standard: one token sheet, one kit. Every page is built from these and nothing else.
+   HERO · RECEIPTS · THE STACK · THE GLASS · HONEST EXPANDER. The law of the page: the loudest true number leads, every
+   caveat waits behind a click, and no section is prose. Fonts are the house's three faces, served from the page. */
+@font-face{font-family:'Fraunces';src:url('vendor/fonts/fraunces/files/fraunces-latin-full-italic.woff2') format('woff2');font-weight:100 900;font-style:italic;font-display:swap}
+@font-face{font-family:'Fraunces';src:url('vendor/fonts/fraunces/files/fraunces-latin-full-normal.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Hanken Grotesk';src:url('vendor/fonts/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2') format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('vendor/fonts/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2') format('woff2');font-weight:100 800;font-display:swap}
+:root{color-scheme:dark;--bg:#02070c;--bg2:#060e18;--panel:#081320;--ink:#e9f2f6;--soft:#aebecb;--muted:#6f8698;--cyan:#49e8c8;--cyan-dim:#1f6a60;--gold:#ffcf6a;--red:#ff6b6b;--line:rgba(255,255,255,.09);--line2:rgba(255,255,255,.055);--display:'Fraunces',Georgia,serif;--sans:'Hanken Grotesk',system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;--gut:max(20px,env(safe-area-inset-left,0px));--gutr:max(20px,env(safe-area-inset-right,0px))}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{line-height:1.5;font-size:16px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gutr)}
+.mono{font-family:var(--mono)}
+em{font-style:italic;font-family:var(--display);font-weight:600}
+code{font:500 .88em var(--mono);color:var(--cyan);overflow-wrap:anywhere}
+.pass{color:var(--cyan)}.fail{color:var(--red)}.pend{color:var(--gold)}.dim{color:var(--muted)}
+
+/* HERO: the crystal behind the headline */
+.hero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:radial-gradient(120% 90% at 70% 18%,#0a1826 0%,var(--bg) 58%)}
+#crystal{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0}
+.hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,rgba(2,7,12,.78) 0%,rgba(2,7,12,.34) 46%,rgba(2,7,12,0) 70%),radial-gradient(130% 110% at 50% 42%,transparent 50%,rgba(2,6,12,.7) 100%)}
+.hero .wrap{position:relative;z-index:2;width:100%;padding-block:12vh;pointer-events:none}
+.hero .wrap>*{pointer-events:auto}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);margin:0}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(44px,9vw,104px);line-height:.98;letter-spacing:-.02em;margin:18px 0 0;text-wrap:balance;max-width:14ch}
+h1 em{color:var(--cyan)}
+.sub{font-size:clamp(16px,2.3vw,21px);color:var(--soft);max-width:46ch;margin:26px 0 0;line-height:1.55}
+.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:38px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:13.5px;letter-spacing:.02em;padding:13px 20px;min-height:46px;border-radius:999px;text-decoration:none;transition:.18s ease;white-space:nowrap;cursor:pointer;border:1px solid transparent;background:none;color:var(--ink)}
+.btn.primary{background:var(--cyan);color:#021310;font-weight:700}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px -12px var(--cyan)}
+.btn.ghost{border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn:disabled{opacity:.5;cursor:default;transform:none}
+.facet{position:absolute;z-index:3;left:var(--gut);bottom:22px;font:500 12px/1.5 var(--mono);color:var(--soft);max-width:min(560px,calc(100vw - 40px));min-height:18px;pointer-events:none}
+.facet b{color:var(--ink);font-weight:500}
+
+/* SECTIONS */
+section{position:relative;z-index:2}
+.pad{padding-block:clamp(72px,11vh,140px)}
+.alt{background:linear-gradient(180deg,var(--bg),#040b14);border-top:1px solid var(--line2)}
+.deep{background:var(--bg2);border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+.kline{font-family:var(--mono);font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--cyan);margin:0 0 20px}
+.claim{font-family:var(--display);font-weight:400;font-size:clamp(30px,5.2vw,58px);line-height:1.05;letter-spacing:-.015em;text-wrap:balance;max-width:20ch;margin:0}
+.claim b{font-weight:600}
+.claim em{color:var(--cyan)}
+.lede{color:var(--soft);font-size:clamp(15px,1.9vw,18px);line-height:1.6;max-width:52ch;margin:26px 0 0}
+.lede b{color:var(--ink);font-weight:600}
+
+/* RECEIPTS: the number is the hero */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:64px;border-top:1px solid var(--line);padding-top:48px}
+.stat .n{font-family:var(--mono);font-weight:700;font-size:clamp(38px,6.6vw,76px);line-height:1;letter-spacing:-.02em;white-space:nowrap}
+.stat .n .was{color:var(--muted)}.stat .n .arrow{color:var(--cyan-dim);padding:0 .12em}.stat .n .now{color:var(--cyan)}.stat .n .bad{color:var(--red)}.stat .n .wait{color:var(--gold)}
+.stat .lab{color:var(--soft);font-size:14px;margin-top:16px;line-height:1.5;max-width:28ch}
+.stat .lab b{color:var(--ink);font-weight:600}
+.src{display:inline-block;font:500 11px/1 var(--mono);letter-spacing:.06em;color:var(--muted);text-decoration:none;margin-top:10px;border-bottom:1px dotted var(--muted);padding-bottom:2px}
+.src:hover{color:var(--cyan);border-color:var(--cyan)}
+.wins{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:42px}
+.win{border:1px solid var(--line2);border-radius:16px;padding:26px 22px;background:var(--panel)}
+.win .wn{font-family:var(--mono);font-weight:700;font-size:clamp(26px,3.6vw,42px);color:var(--cyan);letter-spacing:-.02em;line-height:1;white-space:nowrap}
+.win .wn .of{color:var(--muted)}
+.win .wl{color:var(--soft);font-size:13px;margin-top:12px;line-height:1.5}
+
+/* CARDS */
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+.acts.two{grid-template-columns:repeat(2,1fr)}
+.act{position:relative;display:flex;flex-direction:column;background:linear-gradient(180deg,var(--panel),#050c15);border:1px solid var(--line2);border-radius:18px;padding:28px 24px 24px;text-decoration:none;transition:.2s ease;overflow:hidden}
+a.act:hover,.act.lift:hover{border-color:var(--cyan);transform:translateY(-4px);box-shadow:0 24px 60px -34px #000}
+.act::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(73,232,200,.10),transparent 60%)}
+.act:hover::before{opacity:1}
+.act .num{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--muted)}
+.act h3{font-family:var(--display);font-weight:500;font-size:26px;letter-spacing:-.01em;margin:14px 0 0}
+.act p{color:var(--soft);font-size:14.5px;line-height:1.55;margin:10px 0 0;flex:1}
+.act .go{font-family:var(--mono);font-size:12.5px;color:var(--cyan);margin-top:18px;display:inline-flex;gap:7px;align-items:center}
+
+/* THE STACK: one line per layer */
+.stack{margin-top:44px;border:1px solid var(--line2);border-radius:18px;overflow:hidden;background:#040b13}
+.srow{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;border-top:1px solid var(--line2);padding:16px 22px;transition:.16s}
+.srow:first-child{border-top:none}
+.srow:hover{background:#08141f}
+.srow .d{font-family:var(--mono);font-size:12px;color:var(--cyan);letter-spacing:.12em}
+.srow .nm{display:flex;gap:6px 14px;align-items:baseline;flex-wrap:wrap;min-width:0}
+.srow .nm b{font-family:var(--display);font-weight:500;font-size:19px}
+.srow .nm span{color:var(--soft);font-size:14px;min-width:0;overflow-wrap:anywhere}
+.srow.red .d{color:var(--red)}.srow.gold .d{color:var(--gold)}
+.tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.tag.cy{color:var(--cyan);border:1px solid rgba(73,232,200,.32)}
+.tag.gd{color:var(--gold);border:1px solid rgba(255,207,106,.34);animation:breathe 2.4s ease-in-out infinite}
+.tag.rd{color:var(--red);border:1px solid rgba(255,107,107,.4)}
+@keyframes breathe{50%{opacity:.55}}
+
+/* THE GLASS: it runs here, on the visitor's own device */
+.glass{margin-top:44px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#07121d,#040b13);padding:26px 24px;box-shadow:0 30px 80px -50px #000,inset 0 1px 0 rgba(255,255,255,.04)}
+.glass h3{font-family:var(--display);font-weight:500;font-size:24px;margin:0 0 6px}
+.glass .hint{color:var(--soft);font-size:14px;margin:0 0 16px;max-width:60ch}
+.glass .out{font:500 13px/1.6 var(--mono);color:var(--soft);margin:14px 0 0;min-height:22px}
+.glass textarea,.glass input,.glass select{font:500 13px/1.5 var(--mono);color:var(--ink);background:rgba(2,7,12,.75);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-width:100%;min-height:42px}
+.glass textarea{width:100%;min-height:128px}
+.glass label{font:500 11px/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:inline-flex;flex-direction:column;gap:5px}
+.row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{border:1px solid var(--line2);border-radius:14px;padding:14px 16px;background:rgba(2,7,12,.5);min-width:0}
+.box h4{font:500 11px/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+pre{font:500 12.5px/1.55 var(--mono);color:var(--ink);margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.wall svg{width:100%;height:auto;display:block}
+.wall rect{cursor:pointer;transition:opacity .15s}
+.wall rect:hover{opacity:.7}
+.key{display:flex;flex-wrap:wrap;gap:6px 18px;margin:12px 0 0;font:500 11.5px/1.4 var(--mono);color:var(--muted)}
+.key i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+/* PROOF + THE HONEST EXPANDER */
+.proof{text-align:center}
+.proof .hl{font-family:var(--display);font-style:italic;font-weight:500;font-size:clamp(38px,8vw,88px);line-height:1;letter-spacing:-.02em;margin:0}
+.proof .hl .a{color:var(--muted)}.proof .hl .b{color:var(--cyan)}
+.proof .sub2{color:var(--soft);margin:24px auto 0;max-width:42ch;font-size:16px}
+.links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:36px}
+.plink{font-family:var(--mono);font-size:13px;text-decoration:none;color:var(--ink);border:1px solid var(--line);padding:11px 18px;border-radius:999px;transition:.18s;min-height:44px;display:inline-flex;align-items:center}
+.plink:hover{border-color:var(--cyan);color:var(--cyan)}
+details.honest{max-width:680px;margin:22px auto 0;border:1px solid var(--line2);border-radius:14px;background:#040b13;text-align:left}
+details.honest:first-of-type{margin-top:52px}
+details.honest summary{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--muted);padding:16px 20px;cursor:pointer;list-style:none;min-height:48px}
+details.honest summary::-webkit-details-marker{display:none}
+details.honest summary::before{content:"+ ";color:var(--cyan)}
+details.honest[open] summary::before{content:"– "}
+details.honest .in{padding:0 20px 20px;color:var(--soft);font-size:14px;line-height:1.6}
+details.honest .in p{margin:0 0 10px}
+details.honest .in b{color:var(--ink)}
+details.honest .in a{color:var(--cyan)}
+
+footer{border-top:1px solid var(--line2);padding-block:46px;position:relative;z-index:2}
+.frow{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-size:22px}
+.taglist{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.9;letter-spacing:.02em}
+.taglist span{color:var(--cyan)}
+.fnote{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:14px;letter-spacing:.02em;line-height:1.8}
+.fnote a{color:var(--soft)}
+
+/* MOTION */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.js .reveal.in{opacity:1;transform:none}
+@media(max-width:860px){.acts{grid-template-columns:repeat(2,1fr)}.wins{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){.stats{grid-template-columns:1fr;gap:40px}.two{grid-template-columns:1fr}.hero-shade{background:linear-gradient(180deg,rgba(2,7,12,.2) 0%,rgba(2,7,12,.82) 62%)}.hero{align-items:flex-end}.hero .wrap{padding-block:9vh}}
+@media(max-width:680px){.acts,.acts.two{grid-template-columns:1fr}.srow{grid-template-columns:48px minmax(0,1fr);padding:14px 16px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.js .reveal{opacity:1;transform:none;transition:none}.tag.gd{animation:none}.btn,.act{transition:none}}
+</style>
+</head>
+<body>
+<header class="hero" id="top">
+  <canvas id="crystal" role="img" aria-label="A crystal of 32 faces. Each lit face is one receipt on this page: cyan when it is sealed, gold while it is still sealing, red when it failed and is kept."></canvas>
+  <div class="hero-shade"></div>
+  <div class="wrap">
+    <p class="eyebrow">AI Native Solutions</p>
+    <h1>AI you <em>own.</em><br>Proof you can <em>re-run.</em></h1>
+    <p class="sub">A small AI that gives you an answer, or admits it can't. It runs on your own machine, and nothing leaves your browser.</p>
+    <div class="cta"><a class="btn primary" href="https://sjgant80-hub.github.io/the-verifier-set/">See it refuse to lie →</a><a class="btn ghost" href="#result">How it works</a></div>
+  </div>
+  <p class="facet" id="facet" aria-live="polite">14 receipts sealed · 2 sealing now · 1 failed and kept · 4 pages still to rebuild · point at a face</p>
+</header>
+
+<section class="pad" id="result">
+  <div class="wrap">
+    <p class="kline reveal">The result</p>
+    <h2 class="claim reveal">The same 1B model. Once with the checks, once without. <b>The checks do the work.</b></h2>
+    <div class="stats" id="receipts"><div class="stat reveal"><div class="n"><span class="was">22</span><span class="arrow">→</span><span class="now" data-count="0">0</span></div><div class="lab">Of <b>24 questions with no answer</b>, the raw model gave 22 confident numbers. Checked, it gave none.</div><a class="src" href="https://sjgant80-hub.github.io/the-verifier-set/">receipt: the verifier set ↗</a></div><div class="stat reveal"><div class="n"><span class="was">34</span><span class="arrow">→</span><span class="now" data-count="139">139</span></div><div class="lab">Right, of <b>144 sealed problems</b> it had never seen. Same model, same weights. The only change is a checker.</div><a class="src" href="https://sjgant80-hub.github.io/the-verifier-set/">receipt: the verifier set ↗</a></div><div class="stat reveal"><div class="n"><span class="now" data-count="0">0</span><span class="was" style="font-size:.42em"> /26,086</span></div><div class="lab"><b>Forged replies</b> that got past the check, of 26,086 thrown at it.</div><a class="src" href="https://sjgant80-hub.github.io/the-crystal/">receipt: the crystal ↗</a></div></div>
+    <p class="lede reveal mono" id="readLine" style="font-size:12.5px">Read from each build's own page on 2026-11-25, at a named commit. Reading them again, live…</p>
+  </div>
+</section>
+
+<section class="pad alt" id="builds-s">
+  <div class="wrap">
+    <p class="kline reveal">Five builds, one engine. Each sealed, each re-runnable</p>
+    <h2 class="claim reveal">Open any one. <b>Press the button. Watch it hold.</b></h2>
+    <div class="acts two" id="builds"><a class="act reveal" href="https://sjgant80-hub.github.io/the-climb/"><span class="num">01 — THE CLIMB</span><h3>It climbs.</h3><p>A problem it fails cold, broken into steps it can do. Each step checked. <b style="color:var(--ink)">36.5% → 70.8%</b> of 96 sealed problems. <span class="dim">7 of 8 claims passed, 1 failed and kept.</span></p><span class="go">Open the live proof →</span></a><a class="act reveal" href="https://sjgant80-hub.github.io/the-crystal/"><span class="num">02 — THE CRYSTAL</span><h3>It crystallises.</h3><p>The answer grown from proven pieces. What cannot be proven dissolves. <b style="color:var(--ink)">31.0% → 85.7%</b> of 84 sealed problems. <span class="dim">7 of 7 claims passed.</span></p><span class="go">Open the live proof →</span></a><a class="act reveal" href="https://sjgant80-hub.github.io/the-verifier-set/"><span class="num">03 — THE VERIFIER SET</span><h3>It refuses to lie.</h3><p>Checked against the arithmetic or the cited source, or not released. <b style="color:var(--ink)">34 → 139</b> of 144 sealed problems. <span class="dim">12 of 12 claims passed.</span></p><span class="go">Open the live proof →</span></a><a class="act reveal" href="https://sjgant80-hub.github.io/the-seed/"><span class="num">04 — THE SEED</span><h3>It grows itself.</h3><p>A handful of files that grows verified software, one cell at a time.</p><span class="go">Open the live proof →</span></a><a class="act reveal" href="https://sjgant80-hub.github.io/the-distillation/"><span class="num">05 — THE DISTILLATION <span class="tag gd">sealing now</span></span><h3>It learns.</h3><p>Trained only on its own verified work. Tested cold on problems it never saw. <span class="dim">0 of 6 claims passed, 6 sealing.</span></p><span class="go">Open the live proof →</span></a></div>
+  </div>
+</section>
+
+<section class="pad" id="engine">
+  <div class="wrap">
+    <p class="kline reveal">Under the hood</p>
+    <h2 class="claim reveal">Seven layers. Each one watches the one below. <b>It bottoms out in proof, and tops out in you.</b></h2>
+    <div class="stack reveal" id="stackRows"><div class="srow "><div class="d">D0</div><div class="nm"><b>Substrate</b><span>the 1B model, and the few facts it gets right cold</span></div></div><div class="srow "><div class="d">D1</div><div class="nm"><b>Bond-check</b><span>verifies every step; dissolves what it cannot prove</span></div></div><div class="srow "><div class="d">D2</div><div class="nm"><b>Trajectory</b><span>splits a stuck step until the model cannot get it wrong</span></div></div><div class="srow "><div class="d">D3</div><div class="nm"><b>Crystal</b><span>grows verified answers in parallel, reusing proven work</span><span class="tag cy">94% of tokens reused</span></div></div><div class="srow "><div class="d">D4</div><div class="nm"><b>Fuzzer</b><span>attacks its own verifier so no false bond can form</span></div></div><div class="srow gold"><div class="d">D5</div><div class="nm"><b>Distillation</b><span>learns from its own verified traces to get better cold</span><span class="tag gd">sealing now</span></div></div><div class="srow "><div class="d">D6</div><div class="nm"><b>You</b><span>nothing irreversible, and no new weights, without your grant</span></div></div></div>
+    <div class="wins" id="wins"><div class="win reveal"><div class="wn">94%</div><div class="wl">of tokens taken over from proven work, not worked out again <a class="src" href="https://sjgant80-hub.github.io/the-distillation/data/parity.json">receipt ↗</a></div></div><div class="win reveal"><div class="wn">0<span class="of">/26,086</span></div><div class="wl">forged replies that got past the check <a class="src" href="https://sjgant80-hub.github.io/the-crystal/">receipt ↗</a></div></div><div class="win reveal"><div class="wn">26<span class="of">/27</span></div><div class="wl">sealed claims passed across the builds; 1 failed and is kept; 6 more are sealing now</div></div><div class="win reveal"><div class="wn">68<span class="of">/68</span></div><div class="wl">planted bugs caught in this page's own kernels <a class="src" href="data/gates.json">receipt ↗</a></div></div></div>
+  </div>
+</section>
+
+<section class="pad alt" id="standard">
+  <div class="wrap">
+    <p class="kline reveal">The house standard, live</p>
+    <h2 class="claim reveal">One rule for every page: <b>verify or dissolve, <em>shown.</em></b></h2>
+    <div class="glass reveal">
+      <h3>Hold a page to the standard</h3>
+      <p class="hint">Seven checks, run here, in your tab, on each build's live page. A page that fails stays on this wall, in red, until it is rebuilt.</p>
+      <div class="stack" style="margin-top:0" id="wall"><div class="srow red"><div class="d">01</div><div class="nm"><b>The Climb</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="6347 words before any click (at most 1250); the longest paragraph is 272 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="0 of 4 house colours, 0 of 3 house faces">H6✗</span> <span class="fail" title="the credit line is on the page; a price is on the page; no private shorthand">H7✗</span> · 6,347 words before a click</span><span class="tag rd">fails 6 of 7 · kept</span></div></div><div class="srow red"><div class="d">02</div><div class="nm"><b>The Crystal</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="3326 words before any click (at most 1250); the longest paragraph is 253 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="1 of 4 house colours, 3 of 3 house faces">H6✗</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 3,326 words before a click</span><span class="tag rd">fails 5 of 7 · kept</span></div></div><div class="srow red"><div class="d">03</div><div class="nm"><b>The Verifier Set</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="5099 words before any click (at most 1250); the longest paragraph is 224 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="1 of 4 house colours, 3 of 3 house faces">H6✗</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 5,099 words before a click</span><span class="tag rd">fails 5 of 7 · kept</span></div></div><div class="srow red"><div class="d">04</div><div class="nm"><b>The Seed</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="2010 words before any click (at most 1250); the longest paragraph is 205 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="2 of 4 house colours, 2 of 3 house faces">H6✗</span> <span class="fail" title="the credit line is missing; no price; no private shorthand">H7✗</span> · 2,010 words before a click</span><span class="tag rd">fails 6 of 7 · kept</span></div></div><div class="srow "><div class="d">05</div><div class="nm"><b>The Distillation</b><span><span class="pass" title="crystal hero, 3 receipts, 15 stack rows, 20 controls on the glass, 11 expanders">H1✓</span> <span class="pass" title="932 words before any click (at most 1250); the longest paragraph is 22 words (at most 45)">H2✓</span> <span class="pass" title="3 of 3 receipts carry their source, or say they are still sealing">H3✓</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="pass" title="31 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✓</span> <span class="pass" title="4 of 4 house colours, 3 of 3 house faces">H6✓</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 932 words before a click</span><span class="tag cy">meets it</span></div></div></div>
+      <div class="row" style="margin-top:18px"><button id="recheck" class="btn primary" type="button">Read them again, live</button><button id="tryPage" class="btn ghost" type="button">Check the page you paste</button></div>
+      <textarea id="paste" spellcheck="false" aria-label="Any page's HTML" placeholder="Paste any page's HTML here, then press the button." style="margin-top:14px;min-height:90px"></textarea>
+      <p class="out" id="pasteOut" aria-live="polite">Paste a page to see which of the seven it meets.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pad deep" id="why">
+  <div class="wrap">
+    <p class="kline reveal">Why it was built</p>
+    <h2 class="claim reveal" style="max-width:24ch">The industry is building the opposite, and asking you to <em>trust it anyway.</em></h2>
+    <p class="lede reveal">Giant models, rented by the token, on someone else's servers. <b>This is the other direction:</b> AI you own, that proves itself, that a stranger can verify in a browser tab. Trustworthy because it is <b>checkable</b>, not because it is big.</p>
+  </div>
+</section>
+
+<section class="pad proof" id="proof">
+  <div class="wrap">
+    <h2 class="hl reveal"><span class="a">Don't trust us.</span><br><span class="b">Re-run it.</span></h2>
+    <p class="sub2 reveal">Every number on this page is sealed and reproducible. Open any build, press the button, and watch it hold on your own hardware.</p>
+    <div class="links reveal"><a class="plink" href="https://sjgant80-hub.github.io/the-verifier-set/">the verifier set ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-crystal/">the crystal ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-climb/">the climb ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-seed/">the seed ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-distillation/">the distillation ↗</a><a class="plink" href="https://github.com/sjgant80-hub/house-standard">the standard ↗</a></div>
+    <details class="honest reveal"><summary>What this does — and doesn't — claim</summary><div class="in">
+      <p><b>It is narrow on purpose.</b> It works where truth is machine-checkable: arithmetic, logic, facts cited from a document. Everywhere else it says "I can't tell". That refusal is the product.</p>
+      <p><b>Grounded is not proven.</b> An answer cited from a document is only as true as the document. Each page labels which is which.</p>
+      <p><b>Nothing is claimed early.</b> The loop that lets the model retrain on its own verified work is sealing now. Its number appears here when it lands, pass or fail, and not before.</p>
+      <p><b>This page reads; it does not vouch.</b> Each number is read from the page that proves it. The proof is there: the sealed run, the gate, the records you can re-run.</p>
+      <p><b>A failed claim stays.</b> <span data-bind="h.failed">The Climb's C8 (each pass squares what is left) failed its bar and is still on its page, in red.</span></p></div></details>
+    <details class="honest reveal"><summary>The house standard, in one screen</summary><div class="in">
+      <p><b>The page.</b> A crystal hero. Receipts: big numbers, one plain line each, source one click away. A stack. A glass that runs the thing on your device. Limits behind one click. No wall of text.</p>
+      <p><b>The organ.</b> A birth check in CI. Claims registered before any run. A hash seal. A clean mutation gate. Every number re-derived in the browser. Failures kept, in red. Inputs verified and recorded.</p>
+      <p><b>The rule.</b> Verify or dissolve, shown. Nothing unsealed is claimed; what is not finished says "sealing now".</p>
+      <p>The kit, the ship gate and the scaffold are in <a href="https://github.com/sjgant80-hub/house-standard">the repository</a>. <span data-bind="h.gate">Its kernels' mutation gate: 68 of 68 planted bugs caught.</span></p></div></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap frow">
+    <div>
+      <div class="brand">AI Native Solutions</div>
+      <div class="fnote">Sovereign, verifiable AI · built by Kar · MIT licence (holder Simon Gant) · <a href="https://www.ai-nativesolutions.com">ai-nativesolutions.com</a><br>Powered by the Konomi architecture, created by Thomas Frumkin.</div>
+    </div>
+    <div class="taglist"><span>›</span> AI you own. Proof you can re-run.<br><span>›</span> A small model that says "I can't tell."<br><span>›</span> Nothing leaves your browser.</div>
+  </div>
+</footer>
+<script type="module">
+// kit/crystal.js, inlined byte for byte (imports read the scopes above; export removed)
+const CRYSTAL = (() => {
+// crystal.js — the house hero: a living crystal, drawn by one fragment shader. No library is fetched.
+//
+// It is a real solid, not a picture of one: a 32-faced gem (an icosahedron cut by a dodecahedron) that every pixel's
+// ray is intersected with exactly. Light is bent into the body, carried through it, turned back where it cannot leave
+// and bent out again, once for each of three colours, so the facets split light the way glass does. The body absorbs
+// as it carries; its edges burn; a slow lattice of light moves inside it.
+//
+// And it is bound to data. Each of the 32 faces holds a state the page gives it: dark, proven (cyan), sealing (gold,
+// breathing) or failed (red, kept). A page lights a face only for a receipt it has re-derived, so the crystal is the
+// record, not decoration. A face can be pointed at and pressed: the page is told which one.
+//
+//   mount(canvas, options) → { setFaces, setEnergy, setCentre, onHover, onPick, redraw, destroy, FACES }   or null
+// It decides nothing. With no WebGL the canvas is left as it is (the page's own background shows) and null is returned.
+
+const FACES = 32;
+const STATE = { dark: 0, proven: 1, sealing: 2, failed: 3 };
+const PHI = (1 + Math.sqrt(5)) / 2;
+const unit = (v) => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+// ten icosahedron normals, then six dodecahedron normals; each stands for a pair of opposite faces (i and i + 16)
+const NORMALS = [[1, 1, 1], [-1, 1, 1], [1, -1, 1], [1, 1, -1], [0, 1, PHI + 1], [0, -1, PHI + 1], [PHI + 1, 0, 1], [-PHI - 1, 0, 1], [1, PHI + 1, 0], [-1, PHI + 1, 0], [0, PHI, 1], [0, -PHI, 1], [1, 0, PHI], [-1, 0, PHI], [PHI, 1, 0], [-PHI, 1, 0]].map(unit);
+const R_ICOSA = 1.2, R_CUT = 1.37, CAMERA = 5.2, FOV = 0.8284;
+
+const VERT = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+const FRAG = `
+precision highp float;
+uniform vec2 uRes; uniform float uTime; uniform mat3 uRot; uniform mat3 uInv; uniform vec3 uCen;
+uniform vec3 uN[16]; uniform float uR[16]; uniform float uState[32]; uniform float uEnergy; uniform float uHot;
+const vec3 CYAN = vec3(0.286, 0.910, 0.784); const vec3 GOLD = vec3(1.0, 0.812, 0.416); const vec3 RED = vec3(1.0, 0.42, 0.42);
+float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float hash3(vec3 p){ p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+float noise(vec3 x){ vec3 i = floor(x), f = fract(x); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(mix(hash3(i), hash3(i + vec3(1,0,0)), f.x), mix(hash3(i + vec3(0,1,0)), hash3(i + vec3(1,1,0)), f.x), f.y),
+             mix(mix(hash3(i + vec3(0,0,1)), hash3(i + vec3(1,0,1)), f.x), mix(hash3(i + vec3(0,1,1)), hash3(i + vec3(1,1,1)), f.x), f.y), f.z); }
+vec3 tint(float s){ return s < 0.5 ? vec3(0.0) : s < 1.5 ? CYAN : s < 2.5 ? GOLD : RED; }
+// the solid: sixteen pairs of planes. Where a ray enters and leaves, through which faces, and how near an edge.
+bool solid(vec3 ro, vec3 rd, out float tN, out float tF, out vec3 nN, out vec3 nF, out float sN, out float sF, out float eN, out float eF, out float iN){
+  tN = -1e9; tF = 1e9; float tN2 = -1e9; float tF2 = 1e9; nN = vec3(0.0); nF = vec3(0.0); sN = 0.0; sF = 0.0; iN = -1.0;
+  for (int i = 0; i < 16; i++){
+    vec3 n = uN[i]; float dn = dot(rd, n); dn = abs(dn) < 1e-5 ? 1e-5 : dn; float po = dot(ro, n);
+    float tp = (uR[i] - po) / dn; float tm = (-uR[i] - po) / dn;
+    float ta; float tb; vec3 na; vec3 nb; float sa; float sb; float ia;
+    if (dn < 0.0) { ta = tp; na = n; sa = uState[i]; ia = float(i); tb = tm; nb = -n; sb = uState[i + 16]; }
+    else { ta = tm; na = -n; sa = uState[i + 16]; ia = float(i) + 16.0; tb = tp; nb = n; sb = uState[i]; }
+    if (ta > tN) { tN2 = tN; tN = ta; nN = na; sN = sa; iN = ia; } else if (ta > tN2) { tN2 = ta; }
+    if (tb < tF) { tF2 = tF; tF = tb; nF = nb; sF = sb; } else if (tb < tF2) { tF2 = tb; }
+  }
+  eN = tN - tN2; eF = tF2 - tF;
+  return tN < tF && tF > 0.0;
+}
+// what the crystal reflects and bends: a dark sea, three lamps, a horizon, slow bars of light
+vec3 world(vec3 d){
+  vec3 c = mix(vec3(0.0006, 0.003, 0.006), vec3(0.006, 0.028, 0.042), pow(clamp(d.y * 0.5 + 0.5, 0.0, 1.0), 1.5));
+  c += CYAN * 2.2 * pow(max(dot(d, normalize(vec3(0.6, 0.7, 0.4))), 0.0), 26.0);
+  c += vec3(0.6, 0.8, 1.0) * 1.3 * pow(max(dot(d, normalize(vec3(-0.7, 0.3, 0.5))), 0.0), 60.0);
+  c += GOLD * 0.55 * pow(max(dot(d, normalize(vec3(0.1, -0.8, 0.5))), 0.0), 28.0);
+  c += vec3(0.15, 0.5, 0.45) * exp(-abs(d.y) * 14.0) * 0.12;
+  float bars = smoothstep(0.9, 1.0, sin(d.x * 9.0 + d.z * 5.0 + uTime * 0.07) * 0.5 + 0.5);
+  return c + vec3(0.5, 0.9, 0.85) * bars * 0.22 * smoothstep(-0.2, 0.6, d.y);
+}
+// one colour of light through the body: bent in, carried, turned back once if it cannot leave, bent out
+vec3 through(vec3 p, vec3 rd, vec3 n, float ior, out float path, out float sX, out float eX){
+  vec3 d = refract(rd, n, 1.0 / ior); vec3 o = p - n * 0.003; vec3 leave = d; path = 0.0; sX = 0.0; eX = 1.0;
+  for (int b = 0; b < 2; b++){
+    float tN; float tF; vec3 nN; vec3 nF; float sN; float sF; float eN; float eF; float iN;
+    solid(o, d, tN, tF, nN, nF, sN, sF, eN, eF, iN);
+    path += max(tF, 0.0);
+    if (b == 0) { sX = sF; eX = eF; }
+    vec3 r = refract(d, -nF, ior);
+    if (dot(r, r) > 0.0) { leave = r; break; }
+    vec3 q = o + d * tF; d = reflect(d, -nF); o = q - nF * 0.003; leave = d;
+  }
+  return leave;
+}
+void main(){
+  vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;
+  vec3 ro = vec3(0.0, 0.0, ${CAMERA.toFixed(1)}); vec3 rd = normalize(vec3(uv * ${FOV.toFixed(4)}, -1.0));
+  // the room: depth, a breath of light round the crystal, three drifts of dust
+  vec3 col = mix(vec3(0.0002, 0.0008, 0.0016), vec3(0.0016, 0.0042, 0.0085), exp(-length(uv - vec2(0.36, 0.3)) * 1.9));
+  float near = length(cross(rd, uCen - ro));
+  col += CYAN * 0.010 * uEnergy * exp(-near * near * 0.42);
+  for (int k = 0; k < 3; k++){
+    float sc = 14.0 + float(k) * 11.0; vec2 g = uv * sc + vec2(uTime * 0.010 * float(k + 1), uTime * 0.006);
+    vec2 id = floor(g); vec2 f = fract(g) - 0.5; float h = hash(id + float(k) * 17.0);
+    vec2 o = vec2(hash(id + 3.1), hash(id + 7.7)) - 0.5; float tw = 0.5 + 0.5 * sin(uTime * (0.6 + h * 2.0) + h * 40.0);
+    col += vec3(0.56, 0.91, 0.85) * smoothstep(0.045, 0.0, length(f - o * 0.7)) * step(0.9, h) * tw * (0.22 - 0.05 * float(k));
+  }
+  vec3 lo = uInv * (ro - uCen); vec3 ld = uInv * rd;
+  float tN; float tF; vec3 nN; vec3 nF; float sN; float sF; float eN; float eF; float iN;
+  if (solid(lo, ld, tN, tF, nN, nF, sN, sF, eN, eF, iN) && tN > 0.0){
+    vec3 p = lo + ld * tN; float facing = max(dot(-ld, nN), 0.0); float fres = pow(1.0 - facing, 3.0);
+    float pa; float sa; float ea; float pathG; float sX; float eX;
+    vec3 dr = through(p, ld, nN, 1.41, pa, sa, ea);
+    vec3 dg = through(p, ld, nN, 1.45, pathG, sX, eX);
+    vec3 db = through(p, ld, nN, 1.50, pa, sa, ea);
+    vec3 bent = vec3(world(uRot * dr).r, world(uRot * dg).g, world(uRot * db).b);
+    vec3 body = exp(-pathG * vec3(1.5, 0.38, 0.52) * 0.8);
+    vec3 c = mix(bent * body, world(uRot * reflect(ld, nN)), 0.06 + 0.9 * fres);
+    vec3 cN = tint(sN); vec3 cX = tint(sX);
+    float breath = (sN > 1.5 && sN < 2.5) ? 0.6 + 0.4 * sin(uTime * 1.8 + iN) : 1.0;
+    c += cN * (0.012 + 0.10 * fres) * breath * uEnergy;                 // a lit face glows from within
+    c += cX * 0.03 * body.g * uEnergy;                                  // the far side, seen through the body
+    float edge = exp(-eN * 90.0) + 0.35 * exp(-eX * 60.0) * body.g;      // edges burn
+    c += mix(vec3(0.16, 0.55, 0.48), cN, step(0.5, sN)) * edge * (0.35 + 0.45 * uEnergy);
+    vec3 mid = p + refract(ld, nN, 1.0 / 1.45) * pathG * 0.5;           // the lattice of light inside
+    c += CYAN * pow(noise(mid * 3.2 + vec3(0.0, uTime * 0.12, uTime * 0.05)), 3.0) * 0.05 * uEnergy;
+    c += vec3(0.5, 0.9, 0.85) * (1.0 - step(0.5, abs(iN - uHot))) * 0.07;         // the face under the pointer
+    col = c;
+  }
+  col *= 1.0 - 0.5 * pow(length(uv * vec2(0.75, 1.0)), 2.2);
+  col = 1.0 - exp(-col * 2.4);
+  col = pow(col, vec3(0.4545)); col = mix(col, col * col * (3.0 - 2.0 * col), 0.65) + (hash(gl_FragCoord.xy + uTime) - 0.5) * 0.014;
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+const mul = (m, v) => [m[0] * v[0] + m[3] * v[1] + m[6] * v[2], m[1] * v[0] + m[4] * v[1] + m[7] * v[2], m[2] * v[0] + m[5] * v[1] + m[8] * v[2]];
+// rot(yaw, pitch) → the turn of the crystal as a column-major 3×3, and its inverse (its transpose)
+function rot(yaw, pitch) {
+  const cy = Math.cos(yaw), sy = Math.sin(yaw), cx = Math.cos(pitch), sx = Math.sin(pitch);
+  const m = [cy, sx * sy, -cx * sy, 0, cx, sx, sy, -sx * cy, cx * cy];
+  return { m, inv: [m[0], m[3], m[6], m[1], m[4], m[7], m[2], m[5], m[8]] };
+}
+// faceAt(u, v, aspect, turn, centre, cut) → the face (0…31) a ray through that point of the screen enters by, or -1.
+// u, v run 0…1 from the top left. The same sum the shader does, so the page and the picture agree on which face it is.
+function faceAt(u, v, aspect, turn, centre, cut) {
+  const x = (u - 0.5) * aspect * FOV, y = (0.5 - v) * FOV, l = Math.hypot(x, y, 1);
+  const rd = mul(turn.inv, [x / l, y / l, -1 / l]), ro = mul(turn.inv, [-centre[0], -centre[1], CAMERA - centre[2]]);
+  let tN = -1e9, tF = 1e9, face = -1;
+  for (let i = 0; i < 16; i++) {
+    const n = NORMALS[i], r = i < 10 ? R_ICOSA : cut;
+    let dn = rd[0] * n[0] + rd[1] * n[1] + rd[2] * n[2]; if (Math.abs(dn) < 1e-5) dn = 1e-5;
+    const po = ro[0] * n[0] + ro[1] * n[1] + ro[2] * n[2], tp = (r - po) / dn, tm = (-r - po) / dn;
+    const ta = dn < 0 ? tp : tm, tb = dn < 0 ? tm : tp;
+    if (ta > tN) { tN = ta; face = dn < 0 ? i : i + 16; }
+    if (tb < tF) tF = tb;
+  }
+  return tN < tF && tN > 0 ? face : -1;
+}
+
+function mount(canvas, options) {
+  const opt = options || {};
+  let gl = null;
+  try { gl = canvas && canvas.getContext ? canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'high-performance' }) : null; } catch { gl = null; }
+  if (!gl) return null;
+  const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
+  const vs = sh(gl.VERTEX_SHADER, VERT), fs = sh(gl.FRAGMENT_SHADER, FRAG);
+  if (!vs || !fs) return null;
+  const prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+  gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const a = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(a); gl.vertexAttribPointer(a, 2, gl.FLOAT, false, 0, 0);
+  const U = (n) => gl.getUniformLocation(prog, n);
+  const u = { res: U('uRes'), time: U('uTime'), rot: U('uRot'), inv: U('uInv'), cen: U('uCen'), n: U('uN[0]'), r: U('uR[0]'), state: U('uState[0]'), energy: U('uEnergy'), hot: U('uHot') };
+  gl.uniform3fv(u.n, new Float32Array(NORMALS.flat()));
+  const still = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const S = { faces: new Float32Array(FACES), energy: opt.energy ?? 0.8, target: opt.energy ?? 0.8, centre: [0, 0, 0], yaw: 0.5, pitch: 0.18, vy: 0, vp: 0, drag: null, hot: -1, scale: 1, ms: 16, t: 0, last: 0, seen: true, raf: 0, dead: false, hover: null, pick: null, turn: rot(0.5, 0.18), cut: R_CUT };
+  const size = () => {
+    const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1, d = Math.min(1.5, globalThis.devicePixelRatio || 1) * S.scale;
+    const W = Math.max(2, Math.round(w * d)), H = Math.max(2, Math.round(h * d));
+    if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
+    S.centre = typeof opt.centre === 'function' ? opt.centre(w, h) : [w > 820 ? 1.25 : 0, w > 820 ? 0 : 0.55, 0];
+  };
+  const draw = () => {
+    size();
+    S.turn = rot(S.yaw, S.pitch);
+    S.cut = R_CUT + 0.07 * Math.sin(S.t * 0.35);                        // the cut faces open and close: it breathes
+    const r = new Float32Array(16); for (let i = 0; i < 16; i++) r[i] = i < 10 ? R_ICOSA : S.cut;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.uniform2f(u.res, canvas.width, canvas.height); gl.uniform1f(u.time, S.t); gl.uniformMatrix3fv(u.rot, false, new Float32Array(S.turn.m)); gl.uniformMatrix3fv(u.inv, false, new Float32Array(S.turn.inv));
+    gl.uniform3f(u.cen, S.centre[0], S.centre[1], S.centre[2]); gl.uniform1fv(u.r, r); gl.uniform1fv(u.state, S.faces); gl.uniform1f(u.energy, S.energy); gl.uniform1f(u.hot, S.hot);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  };
+  const frame = (now) => {
+    if (S.dead) return;
+    S.raf = requestAnimationFrame(frame);
+    if (!S.seen || (typeof document !== 'undefined' && document.hidden)) { S.last = now; return; }
+    const dt = Math.min(0.05, (now - (S.last || now)) / 1000); S.last = now;
+    S.ms += ((dt * 1000) - S.ms) * 0.08;
+    if (S.ms > 30 && S.scale > 0.45) S.scale *= 0.92; else if (S.ms < 14 && S.scale < 1) S.scale = Math.min(1, S.scale * 1.03);
+    if (!still) { S.t += dt; if (!S.drag) { S.yaw += dt * 0.16 + S.vy; S.pitch += (0.18 + 0.12 * Math.sin(S.t * 0.22) - S.pitch) * 0.02 + S.vp; S.vy *= 0.94; S.vp *= 0.94; } }
+    S.energy += (S.target - S.energy) * 0.04;
+    draw();
+  };
+  const where = (e) => { const b = canvas.getBoundingClientRect(); return [(e.clientX - b.left) / b.width, (e.clientY - b.top) / b.height, b.width / b.height]; };
+  const face = (e) => { const [x, y, asp] = where(e); return faceAt(x, y, asp, S.turn, S.centre, S.cut); };
+  const down = (e) => { S.drag = { x: e.clientX, y: e.clientY, moved: 0 }; };
+  const move = (e) => {
+    if (S.drag) { const dx = e.clientX - S.drag.x, dy = e.clientY - S.drag.y; S.drag.x = e.clientX; S.drag.y = e.clientY; S.drag.moved += Math.abs(dx) + Math.abs(dy); S.yaw += dx * 0.006; S.pitch = Math.max(-1.2, Math.min(1.2, S.pitch + dy * 0.006)); S.vy = dx * 0.0006; S.vp = 0; if (still) draw(); return; }
+    const f = face(e); if (f !== S.hot) { S.hot = f; canvas.style.cursor = f >= 0 ? 'pointer' : 'grab'; if (S.hover) S.hover(f, e); if (still) draw(); }
+  };
+  const up = (e) => { const d = S.drag; S.drag = null; if (d && d.moved < 6 && S.pick) { const f = face(e); if (f >= 0) S.pick(f, e); } };
+  const leave = () => { S.drag = null; if (S.hot !== -1) { S.hot = -1; if (S.hover) S.hover(-1, null); if (still) draw(); } };
+  canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move); canvas.addEventListener('pointerup', up); canvas.addEventListener('pointerleave', leave);
+  canvas.style.cursor = 'grab'; canvas.style.touchAction = 'pan-y';
+  let io = null;
+  if (typeof IntersectionObserver === 'function') { io = new IntersectionObserver((es) => { for (const e of es) S.seen = e.isIntersecting; }); io.observe(canvas); }
+  const onSize = () => { if (still) draw(); };
+  if (typeof addEventListener === 'function') addEventListener('resize', onSize);
+  draw();
+  S.raf = requestAnimationFrame(frame);
+  return {
+    FACES,
+    setFaces(states) { for (let i = 0; i < FACES; i++) S.faces[i] = Number(states && states[i]) || 0; if (still) draw(); },
+    setEnergy(x) { S.target = Math.max(0, Math.min(1.4, Number(x) || 0)); },
+    setCentre(fn) { opt.centre = fn; if (still) draw(); },
+    onHover(fn) { S.hover = fn; }, onPick(fn) { S.pick = fn; },
+    redraw: draw,
+    destroy() { S.dead = true; cancelAnimationFrame(S.raf); if (io) io.disconnect(); canvas.removeEventListener('pointerdown', down); canvas.removeEventListener('pointermove', move); canvas.removeEventListener('pointerup', up); canvas.removeEventListener('pointerleave', leave); if (typeof removeEventListener === 'function') removeEventListener('resize', onSize); },
+  };
+}
+return { FACES, STATE, NORMALS, rot, faceAt, mount };
+})();
+
+// kit/house.js, inlined byte for byte (imports read the scopes above; export removed)
+const HOUSE = (() => {
+// house.js — the kit's motion: what makes a house page feel alive without saying anything untrue.
+//   reveal(root)          sections rise into place as they are reached
+//   light(root)           a soft light follows the pointer across cards
+//   count(el, text)       a receipt's number runs up to its value when first seen; the value written is exactly `text`
+//   bindScroll(crystal)   the crystal's light answers the scroll: brightest at the top, quieter as the page is read
+// Each is safe to call with nothing to act on, and does nothing where motion is not wanted.
+const still = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function reveal(root) {
+  const els = root && root.querySelectorAll ? [...root.querySelectorAll('.reveal')] : [];
+  if (typeof IntersectionObserver !== 'function' || still()) return;                 // nothing is hidden, so nothing needs showing
+  if (root.documentElement && root.documentElement.classList) root.documentElement.classList.add('js');   // only now may .reveal start hidden
+  const io = new IntersectionObserver((es) => { for (const e of es) if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }, { threshold: 0.14 });
+  for (const el of els) io.observe(el);
+}
+
+function light(root) {
+  if (!root || !root.addEventListener || still()) return;
+  root.addEventListener('pointermove', (e) => {
+    const card = e.target && e.target.closest ? e.target.closest('.act') : null;
+    if (!card) return;
+    const b = card.getBoundingClientRect();
+    card.style.setProperty('--mx', `${e.clientX - b.left}px`); card.style.setProperty('--my', `${e.clientY - b.top}px`);
+  });
+}
+
+// count(el, text): text is the final, true text of the number (for example "31.6%"). Only its digits move, and only
+// on the way in: when it stops, the element holds exactly `text`.
+function count(el, text) {
+  const final = String(text), m = final.match(/^(\D*)(\d+(?:\.\d+)?)(.*)$/);
+  if (!el || !m || still() || typeof requestAnimationFrame !== 'function' || typeof IntersectionObserver !== 'function') { if (el) el.textContent = final; return; }
+  const to = Number(m[2]), places = (m[2].split('.')[1] || '').length;
+  el.textContent = final;
+  const io = new IntersectionObserver((es) => {
+    if (!es.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    const t0 = performance.now(), run = (now) => { const k = Math.min(1, (now - t0) / 900), ease = 1 - (1 - k) ** 3; el.textContent = k < 1 ? `${m[1]}${(to * ease).toFixed(places)}${m[3]}` : final; if (k < 1) requestAnimationFrame(run); };
+    requestAnimationFrame(run);
+  }, { threshold: 0.4 });
+  io.observe(el);
+}
+
+function bindScroll(crystal, base) {
+  if (!crystal || typeof addEventListener !== 'function') return;
+  const top = base ?? 1, set = () => crystal.setEnergy(top * Math.max(0.35, 1 - (globalThis.scrollY || 0) / ((globalThis.innerHeight || 800) * 1.2)));
+  addEventListener('scroll', set, { passive: true }); set();
+}
+return { reveal, light, count, bindScroll };
+})();
+
+// src/standard.mjs, inlined byte for byte (imports read the scopes above; export removed)
+const STANDARD = (() => {
+// standard.mjs — the ship gate, as code. Given a built page (its HTML as text), it rules on the parts of the house
+// standard that a page can be held to mechanically. It cannot tell whether a number is true: that is what the page's
+// own seal, gate and records are for. It tells whether the page is BUILT the way the standard requires.
+//
+//   H1 THE KIT            the crystal hero, receipts, a stack, a glass with something to press, an honest expander
+//   H2 THE LAW OF THE PAGE no paragraph of prose greets a visitor, and the whole default view is short
+//   H3 RECEIPTS           every receipt carries its source one click away, or says it is still sealing
+//   H4 NOTHING UNFINISHED no placeholder, and nothing left unmeasured
+//   H5 THE FAIL-WALL      limits are on the page behind a click, and a failure or an unfinished part is shown as one
+//   H6 ONE IDENTITY       the committed-dark tokens and the three faces
+//   H7 HOUSE RULES        the credit line, no price, no private shorthand
+//
+//   measure(html) → what it counted         check(html) → { pass, rules: [{ id, name, pass, why }], measured }
+// Pure and total: anything that is not a page fails every rule, and nothing throws.
+const LIMITS = { paragraph: 45, view: 1250, limits: 3 };
+const NAMES = { H1: 'The kit', H2: 'The law of the page', H3: 'Receipts', H4: 'Nothing unfinished', H5: 'The fail-wall', H6: 'One identity', H7: 'House rules' };
+const TOKENS = ['#02070c', '#49e8c8', '#ffcf6a', '#ff6b6b'], FACES = ['Fraunces', 'Hanken Grotesk', 'JetBrains Mono'];
+const CREDIT = 'Powered by the Konomi architecture, created by Thomas Frumkin.';
+
+const str = (x) => (typeof x === 'string' ? x : '');
+const strip = (s) => s.replace(/<[^>]+>/g, ' ');
+const words = (s) => strip(s).split(/\s+/).filter(Boolean).length;
+const count = (s, re) => (s.match(re) || []).length;
+// body(html) → what a visitor is shown: the body, without scripts and styles
+const body = (html) => { const a = html.search(/<body[\s>]/i); return (a < 0 ? '' : html.slice(a)).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' '); };
+// blocks(s, cls) → the inner HTML of every element whose class list holds cls (matched to its own closing tag)
+function blocks(s, cls) {
+  const out = [], open = new RegExp(`<([a-z0-9]+)\\b[^>]*\\bclass="[^"]*(?<![\\w-])${cls}(?![\\w-])[^"]*"[^>]*>`, 'gi');
+  for (let m = open.exec(s); m !== null; m = open.exec(s)) {
+    const tag = m[1].toLowerCase(), tags = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'gi');
+    tags.lastIndex = open.lastIndex;
+    let depth = 1, end = -1;
+    for (let t = tags.exec(s); t !== null; t = tags.exec(s)) { depth += t[1] === '/' ? -1 : 1; if (depth === 0) { end = t.index; break; } }
+    if (end !== -1) out.push(s.slice(open.lastIndex, end));
+  }
+  return out;
+}
+
+function measure(html) {
+  const page = str(html), b = body(page);
+  const open = b.replace(/<details[\s\S]*?<\/details>/gi, ' ').replace(/<svg[\s\S]*?<\/svg>/gi, ' ').replace(/<select[\s\S]*?<\/select>/gi, ' ');
+  const paragraphs = [...open.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => words(m[1]));
+  const stats = blocks(b, 'stat'), honest = [...b.matchAll(/<details\b[^>]*\bclass="[^"]*\bhonest\b[^"]*"[^>]*>([\s\S]*?)<\/details>/gi)].map((m) => m[1]);
+  const glass = blocks(b, 'glass');
+  return {
+    crystal: /<canvas\b[^>]*\bid="crystal"/i.test(b), receipts: stats.length, stackRows: blocks(b, 'srow').length, glass: glass.length,
+    controls: count(glass.join(' ') + blocks(b, 'proof').join(' '), /<(button|select|textarea|input)\b/gi), expanders: honest.length,
+    limits: honest.reduce((a, h) => a + count(h, /<p\b/gi), 0),
+    longest: paragraphs.length ? Math.max(...paragraphs) : 0, viewWords: words(open), allWords: words(b),
+    sourced: stats.filter((s) => /<a\b[^>]*\bclass="[^"]*\bsrc\b[^"]*"[^>]*\bhref="[^"]+"/i.test(s) || /sealing now/i.test(s)).length,
+    unfinished: count(strip(b), /not measured yet|lorem ipsum|coming soon|\bTODO\b|\bTBD\b/gi),
+    shown: /class="[^"]*\b(tag rd|fail|bad)\b/.test(b) || /sealing now/i.test(b),
+    tokens: TOKENS.filter((t) => page.toLowerCase().includes(t)).length, faces: FACES.filter((f) => page.includes(f)).length,
+    credit: b.includes(CREDIT), priced: /[£$€]\s?\d|\bper (seat|user|month)\b|\bpricing\b/i.test(strip(b)), shorthand: /[κφ◊]|\btorus\b/i.test(b),
+  };
+}
+
+function check(html) {
+  const m = measure(html), out = [];
+  const rule = (id, pass, why) => out.push({ id, name: NAMES[id], pass, why });
+  const missing = [!m.crystal && 'the crystal hero', m.receipts === 0 && 'receipts', m.stackRows === 0 && 'a stack', (m.glass === 0 || m.controls === 0) && 'a glass with something to press', m.expanders === 0 && 'an honest expander'].filter(Boolean);
+  rule('H1', missing.length === 0, missing.length === 0 ? `crystal hero, ${m.receipts} receipts, ${m.stackRows} stack rows, ${m.controls} controls on the glass, ${m.expanders} expanders` : `missing: ${missing.join(', ')}`);
+  rule('H2', m.allWords > 0 && m.longest <= LIMITS.paragraph && m.viewWords <= LIMITS.view, `${m.viewWords} words before any click (at most ${LIMITS.view}); the longest paragraph is ${m.longest} words (at most ${LIMITS.paragraph})`);
+  rule('H3', m.receipts > 0 && m.sourced === m.receipts, `${m.sourced} of ${m.receipts} receipts carry their source, or say they are still sealing`);
+  rule('H4', m.allWords > 0 && m.unfinished === 0, m.unfinished === 0 ? 'no placeholder on the page' : `${m.unfinished} placeholders on the page`);
+  rule('H5', m.limits >= LIMITS.limits && m.shown, `${m.limits} limits behind a click (at least ${LIMITS.limits}); ${m.shown ? 'a failure or an unfinished part is shown as one' : 'nothing on the page is shown as failed or unfinished'}`);
+  rule('H6', m.tokens === TOKENS.length && m.faces === FACES.length, `${m.tokens} of ${TOKENS.length} house colours, ${m.faces} of ${FACES.length} house faces`);
+  rule('H7', m.credit && !m.priced && !m.shorthand, [m.credit ? 'the credit line is on the page' : 'the credit line is missing', m.priced ? 'a price is on the page' : 'no price', m.shorthand ? 'private shorthand is on the page' : 'no private shorthand'].join('; '));
+  return { pass: out.every((r) => r.pass), rules: out, measured: m };
+}
+return { LIMITS, NAMES, measure, check };
+})();
+
+// src/receipts.mjs, inlined byte for byte (imports read the scopes above; export removed)
+const RECEIPTS = (() => {
+// receipts.mjs — read a flagship's own published page for the numbers it has sealed, so that the front door never
+// types a number: it reads each one from the page that proves it, and can read it again, live, in a visitor's tab.
+//
+// A flagship's page is baked by its own gated kernels from its own sealed records. What is read here is what that
+// page says, word for word; this file adds nothing and rounds nothing.
+//
+//   text(html)              the page as a visitor reads it: the body, tags gone, spaces single
+//   claims(html)            every pre-registered claim on the page: [{ id, name, result, pass }] (pass: true, false,
+//                           or null while it is still sealing). Both layouts are read: the table and the house stack.
+//   headline(repo, html)    that build's headline receipt, or null when its page does not state one:
+//                           { was, now, of, label }  (was → now, out of how many, in plain words)
+//   extra(repo, html)       further receipts a page states: [{ key, value, of, label }]
+// Pure and total.
+const str = (x) => (typeof x === 'string' ? x : '');
+const un = (s) => s.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+const flat = (s) => un(s.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+
+// shown(html) → the body as markup, without its scripts and styles: only what a visitor is shown is ever read
+const shown = (html) => { const h = str(html), a = h.search(/<body[\s>]/i); return a === -1 ? '' : h.slice(a).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' '); };
+
+function text(html) { return flat(shown(html)); }
+
+function claims(html) {
+  const h = shown(html), out = [], seen = new Set();
+  const add = (id, name, result, pass) => { if (!seen.has(id)) { seen.add(id); out.push({ id, name: flat(name), result: flat(result), pass }); } };
+  // the table: <tr><td><b>C1</b> name</td><td>the bar</td><td>what happened</td><td><span class="pass">PASS</span>…
+  for (const m of h.matchAll(/<tr><td><b>([A-Z]\d{1,2})<\/b>([^<]*)<\/td>([\s\S]*?)<\/tr>/g)) {
+    const cells = [...m[3].matchAll(/<td\b[^>]*>([\s\S]*?)<\/td>/g)].map((c) => c[1]);
+    add(m[1], m[2], cells[1] ?? '', /class="pass">PASS</.test(m[3]) ? true : /class="fail">FAIL</.test(m[3]) ? false : null);
+  }
+  // the house stack: <div class="srow"><div class="d">K1</div><div class="nm"><b>name</b><span>what happened</span><span class="tag cy">pass</span>
+  for (const m of h.matchAll(/<div class="srow[^"]*"><div class="d">([A-Z]\d{1,2})<\/div><div class="nm"><b>([^<]*)<\/b><span>([\s\S]*?)<\/span><span class="tag (cy|rd|gd)">/g)) add(m[1], m[2], m[3], m[4] === 'cy' ? true : m[4] === 'rd' ? false : null);
+  return out;
+}
+
+const READ = {
+  'the-climb': (t) => { const m = t.match(/right at the first try (\d+(?:\.\d+)?%) \((\d+) of (\d+)\) right after the climb (\d+(?:\.\d+)?%) \((\d+) of \3\)/); return m && { was: m[1], now: m[4], of: Number(m[3]), label: 'sealed problems right: at one try, then after the climb' }; },
+  'the-crystal': (t) => { const m = t.match(/one try (\d+(?:\.\d+)?%), the crystal (\d+(?:\.\d+)?%) of (\d+) problems/); return m && { was: m[1], now: m[2], of: Number(m[3]), label: 'sealed problems right: at one try, then as a crystal' }; },
+  'the-verifier-set': (t) => { const m = t.match(/got (\d+) of (\d+) right; on the \d+ problems that have no answer it gave a number \d+ times\. The lattice brought (\d+) of \2 out/); return m && { was: m[1], now: m[3], of: Number(m[2]), label: 'sealed problems that came out as they should: unchecked, then checked' }; },
+  'the-distillation': (t) => { const m = t.match(/(\d+(?:\.\d+)?%) → (\d+(?:\.\d+)?%) Right, cold, on (\d+) held-out problems/); return m && { was: m[1], now: m[2], of: Number(m[3]), label: 'held-out problems right, cold: before, then after training on its own verified work' }; },
+};
+const MORE = {
+  'the-crystal': (t) => { const m = t.match(/forged replies that bonded (\d+) of (\d+)/); return m ? [{ key: 'forged', value: m[1], of: Number(m[2]), label: 'forged replies that got past the check' }] : []; },
+  'the-verifier-set': (t) => { const m = t.match(/on the (\d+) with no answer it gave a number (\d+) times\. With the checks, \d+ of \d+ came out as they should, and none of those \1 was answered/); return m ? [{ key: 'unanswerable', value: m[2], after: '0', of: Number(m[1]), label: 'confident numbers given to questions that have no answer: unchecked, then checked' }] : []; },
+};
+const own = (map, repo) => (typeof repo === 'string' && Object.prototype.hasOwnProperty.call(map, repo) ? map[repo] : null);
+
+function headline(repo, html) { const f = own(READ, repo); return f ? f(text(html)) || null : null; }
+function extra(repo, html) { const f = own(MORE, repo); return f ? f(text(html)) : []; }
+return { text, claims, headline, extra };
+})();
+
+// src/flagship.mjs, inlined byte for byte (imports read the scopes above; export removed)
+const FLAGSHIP = (() => {
+// flagship.mjs — everything the front door shows of one build, read from that build's own page and nothing else:
+// its headline receipt, its further receipts, how its pre-registered claims came out, and whether its page meets the
+// house standard. The front door runs this in the visitor's tab on the live page; the build script runs it on the
+// same page at a named commit. One function, so the two can never tell different stories.
+//
+//   read(repo, html) → { headline, extra, claims: { n, pass, fail, sealing, failed: [{ id, name }] },
+//                        standard: { pass, rules: [{ id, pass, why }], viewWords, longest } }
+//   same(a, b)       → true when two readings of a build agree on every number and every verdict
+// Pure and total.
+// RECEIPTS: the scope above, under the same name
+// STANDARD: the scope above, under the same name
+
+function read(repo, html) {
+  const claims = RECEIPTS.claims(html), s = STANDARD.check(html);
+  return {
+    headline: RECEIPTS.headline(repo, html), extra: RECEIPTS.extra(repo, html),
+    claims: { n: claims.length, pass: claims.filter((c) => c.pass === true).length, fail: claims.filter((c) => c.pass === false).length, sealing: claims.filter((c) => c.pass === null).length, failed: claims.filter((c) => c.pass === false).map((c) => ({ id: c.id, name: c.name })) },
+    standard: { pass: s.pass, rules: s.rules.map((r) => ({ id: r.id, pass: r.pass, why: r.why })), viewWords: s.measured.viewWords, longest: s.measured.longest },
+  };
+}
+
+const pick = (x) => { try { return JSON.stringify([x.headline, x.extra, x.claims, x.standard.pass, x.standard.rules.map((r) => r.pass)]); } catch { return null; } };
+function same(a, b) { const x = pick(a); return x !== null && x === pick(b); }
+return { read, same };
+})();
+
+// app.js — the front door. It types no number: each one is read by the kernels above (RECEIPTS, STANDARD, FLAGSHIP)
+// from the flagship page that proves it. data/flagships.json is that reading at a named commit; when the page opens
+// it reads the live pages again, in the visitor's own tab, and shows what it finds. The crystal's lit faces are the
+// receipts on this page: cyan sealed, gold still sealing, red failed and kept.
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const bind = (k, html) => { for (const el of document.querySelectorAll(`[data-bind="${k}"]`)) el.innerHTML = html; };
+const getText = async (p) => { try { const r = await fetch(p); return r.ok ? await r.text() : null; } catch { return null; } };
+const getJSON = async (p) => { const t = await getText(p); try { return t === null ? null : JSON.parse(t); } catch { return null; } };
+const SEALING = '<span class="tag gd">sealing now</span>';
+const S = { builds: [], reuse: null, gate: null, read: null, live: null, crystal: null, faces: [] };
+const B = (repo) => S.builds.find((b) => b.repo === repo) || null;
+const src = (b, what) => `<a class="src" href="${b.live}">receipt: ${esc(what)} ↗</a>`;
+const LAYERS = [['D0', 'Substrate', 'the 1B model, and the few facts it gets right cold'], ['D1', 'Bond-check', 'verifies every step; dissolves what it cannot prove'], ['D2', 'Trajectory', 'splits a stuck step until the model cannot get it wrong'], ['D3', 'Crystal', 'grows verified answers in parallel, reusing proven work'], ['D4', 'Fuzzer', 'attacks its own verifier so no false bond can form'], ['D5', 'Distillation', 'learns from its own verified traces to get better cold'], ['D6', 'You', 'nothing irreversible, and no new weights, without your grant']];
+
+function render() {
+  const v = B('the-verifier-set'), c = B('the-crystal'), d = B('the-distillation');
+  const u = v && v.extra.find((x) => x.key === 'unanswerable'), f = c && c.extra.find((x) => x.key === 'forged');
+  const none = (lab) => `<div class="stat reveal"><div class="n"><span class="wait">—</span></div><div class="lab">${lab} ${SEALING}</div></div>`;
+  $('receipts').innerHTML = (u ? `<div class="stat reveal"><div class="n"><span class="was">${esc(u.value)}</span><span class="arrow">→</span><span class="now" data-count="${esc(u.after)}">${esc(u.after)}</span></div><div class="lab">Of <b>${u.of} questions with no answer</b>, the raw model gave ${esc(u.value)} confident numbers. Checked, it gave none.</div>${src(v, 'the verifier set')}</div>` : none('Confident numbers given to questions with no answer.'))
+    + (v && v.headline ? `<div class="stat reveal"><div class="n"><span class="was">${esc(v.headline.was)}</span><span class="arrow">→</span><span class="now" data-count="${esc(v.headline.now)}">${esc(v.headline.now)}</span></div><div class="lab">Right, of <b>${v.headline.of} sealed problems</b> it had never seen. Same model, same weights. The only change is a checker.</div>${src(v, 'the verifier set')}</div>` : none('Sealed problems right, unchecked then checked.'))
+    + (f ? `<div class="stat reveal"><div class="n"><span class="now" data-count="${esc(f.value)}">${esc(f.value)}</span><span class="was" style="font-size:.42em"> /${f.of.toLocaleString('en')}</span></div><div class="lab"><b>Forged replies</b> that got past the check, of ${f.of.toLocaleString('en')} thrown at it.</div>${src(c, 'the crystal')}</div>` : none('Forged replies that got past the check.'));
+  $('readLine').innerHTML = S.live === null ? `Read from each build's own page on ${esc(S.read)}, at a named commit. Reading them again, live…` : S.live.tried === 0 ? `Read from each build's own page on ${esc(S.read)}, at a named commit.` : `<span class="${S.live.differ ? 'fail' : 'pass'}">Read again just now, in this tab, from ${S.live.got} of ${S.live.tried} live pages: ${S.live.differ ? `${S.live.differ} differ from the reading of ${esc(S.read)}, and the live reading is shown` : 'every number agrees'}.</span>`;
+  $('builds').innerHTML = S.builds.map((b, i) => { const h = b.headline, wait = !h && b.claims.sealing > 0;
+    return `<a class="act reveal" href="${b.live}"><span class="num">0${i + 1} — ${esc(b.name.toUpperCase())}${wait ? ` ${SEALING}` : ''}</span><h3>${esc(b.verb)}</h3><p>${esc(b.line)}${h ? ` <b style="color:var(--ink)">${esc(h.was)} → ${esc(h.now)}</b> of ${h.of} sealed problems.` : ''}${b.claims.n ? ` <span class="dim">${b.claims.pass} of ${b.claims.n} claims passed${b.claims.fail ? `, ${b.claims.fail} failed and kept` : ''}${b.claims.sealing ? `, ${b.claims.sealing} sealing` : ''}.</span>` : ''}</p><span class="go">Open the live proof →</span></a>`; }).join('');
+  const reuse = S.reuse ? Math.round(100 * S.reuse.taken / (S.reuse.taken + S.reuse.worked)) : null;
+  const tagOf = (id) => (id === 'D3' && reuse !== null ? `<span class="tag cy">${reuse}% of tokens reused</span>` : id === 'D5' ? (d && d.headline ? `<span class="tag cy">${esc(d.headline.was)} → ${esc(d.headline.now)} cold</span>` : SEALING) : '');
+  $('stackRows').innerHTML = LAYERS.map(([id, nm, line]) => `<div class="srow ${id === 'D5' && !(d && d.headline) ? 'gold' : ''}"><div class="d">${id}</div><div class="nm"><b>${nm}</b><span>${line}</span>${tagOf(id)}</div></div>`).join('');
+  const win = (n, l, href) => `<div class="win reveal"><div class="wn">${n}</div><div class="wl">${l}${href ? ` <a class="src" href="${href}">receipt ↗</a>` : ''}</div></div>`;
+  const pass = S.builds.reduce((a, b) => a + b.claims.pass, 0), fail = S.builds.reduce((a, b) => a + b.claims.fail, 0), sealing = S.builds.reduce((a, b) => a + b.claims.sealing, 0);
+  $('wins').innerHTML = win(reuse !== null ? `${reuse}%` : '—', 'of tokens taken over from proven work, not worked out again', d ? `${d.live}data/parity.json` : '')
+    + win(f ? `${esc(f.value)}<span class="of">/${f.of.toLocaleString('en')}</span>` : '—', 'forged replies that got past the check', c ? c.live : '')
+    + win(`${pass}<span class="of">/${pass + fail}</span>`, `sealed claims passed across the builds; ${fail} failed and ${fail === 1 ? 'is' : 'are'} kept${sealing ? `; ${sealing} more are sealing now` : ''}`, '')
+    + win(S.gate ? `${S.gate.killed}<span class="of">/${S.gate.total}</span>` : '—', 'planted bugs caught in this page\'s own kernels', 'data/gates.json');
+  $('wall').innerHTML = S.builds.map((b, i) => { const bad = b.standard.rules.filter((r) => !r.pass);
+    return `<div class="srow ${b.standard.pass ? '' : 'red'}"><div class="d">0${i + 1}</div><div class="nm"><b>${esc(b.name)}</b><span>${b.standard.rules.map((r) => `<span class="${r.pass ? 'pass' : 'fail'}" title="${esc(r.why)}">${r.id}${r.pass ? '✓' : '✗'}</span>`).join(' ')} · ${b.standard.viewWords.toLocaleString('en')} words before a click</span>${b.standard.pass ? '<span class="tag cy">meets it</span>' : `<span class="tag rd">fails ${bad.length} of 7 · kept</span>`}</div></div>`; }).join('');
+  const failed = S.builds.flatMap((b) => b.claims.failed.map((x) => `${esc(b.name)}'s ${esc(x.id)} (${esc(x.name.toLowerCase())})`));
+  bind('h.failed', failed.length ? `${failed.join('; ')} failed its bar and is still on its page, in red.` : 'No sealed claim has failed so far; when one does it stays on its page, in red.');
+  bind('h.gate', S.gate ? `Its kernels' mutation gate: ${S.gate.killed} of ${S.gate.total} planted bugs caught.` : '');
+  S.faces = faces();
+  const toRebuild = S.builds.filter((b) => !b.standard.pass).length;
+  S.rest = `${S.faces.filter((x) => x.state === 1).length} receipts sealed · ${S.faces.filter((x) => x.state === 2).length} sealing now · ${failed.length} failed and kept${toRebuild ? ` · ${toRebuild} ${toRebuild === 1 ? 'page' : 'pages'} still to rebuild` : ''} · point at a face`;
+  $('facet').innerHTML = S.rest;
+  if (S.crystal) S.crystal.setFaces(S.faces.map((x) => x.state));
+  HOUSE.reveal(document);                                                 // what was just drawn rises in like the rest
+}
+
+// one face for every receipt on the page, in the order the page shows them
+function faces() {
+  const out = [], v = B('the-verifier-set'), c = B('the-crystal'), d = B('the-distillation');
+  const add = (state, text, to) => out.push({ state, text, to });
+  const u = v && v.extra.find((x) => x.key === 'unanswerable'), f = c && c.extra.find((x) => x.key === 'forged');
+  add(u ? 1 : 2, u ? `<b>${esc(u.value)} → ${esc(u.after)}</b> · confident numbers to questions with no answer` : 'sealing now', 'result');
+  add(v && v.headline ? 1 : 2, v && v.headline ? `<b>${esc(v.headline.was)} → ${esc(v.headline.now)}</b> of ${v.headline.of} sealed problems · The Verifier Set` : 'sealing now', 'result');
+  add(f ? 1 : 2, f ? `<b>${esc(f.value)} of ${f.of.toLocaleString('en')}</b> forged replies got past the check · The Crystal` : 'sealing now', 'result');
+  for (const b of S.builds) add(b.headline ? 1 : b.claims.sealing > 0 ? 2 : 1, `<b>${esc(b.name)}</b> · ${b.headline ? `${esc(b.headline.was)} → ${esc(b.headline.now)} of ${b.headline.of}` : b.claims.sealing > 0 ? 'sealing now' : 'live'}`, 'builds-s');
+  for (const [id, nm] of LAYERS) add(id === 'D5' && !(d && d.headline) ? 2 : 1, `<b>${id} · ${nm}</b>${id === 'D5' && !(d && d.headline) ? ' · sealing now' : ''}`, 'engine');
+  for (const b of S.builds) for (const x of b.claims.failed) add(3, `<b>${esc(b.name)} · ${esc(x.id)}</b> failed its bar, and is kept · ${esc(x.name)}`, 'proof');
+  for (const b of S.builds) add(b.standard.pass ? 1 : 3, `<b>${esc(b.name)}</b> · the house standard: ${b.standard.pass ? 'meets it' : `fails ${b.standard.rules.filter((r) => !r.pass).length} of 7, kept until rebuilt`}`, 'standard');
+  while (out.length < 32) add(0, '', null);
+  return out.slice(0, 32);
+}
+
+// the living part: read every build's live page again, here, with the same kernels
+async function reread() {
+  const live = { tried: 0, got: 0, differ: 0 };
+  $('recheck').disabled = true;
+  try {
+    for (const b of S.builds) {
+      live.tried++;
+      const html = await getText(`../${b.repo}/`);
+      if (html === null || !/<body[\s>]/i.test(html)) continue;
+      const now = FLAGSHIP.read(b.repo, html);
+      live.got++;
+      if (!FLAGSHIP.same(now, b)) live.differ++;
+      Object.assign(b, now);
+    }
+    const p = await getJSON('../the-distillation/data/parity.json');
+    if (p && p.grown) S.reuse = { taken: p.grown.tokens_taken_over, worked: p.grown.tokens_worked_out };
+    S.live = live.got === 0 ? { tried: 0, got: 0, differ: 0 } : live;
+    render();
+    if (S.crystal && live.got) S.crystal.setEnergy(1.25);
+  } finally { $('recheck').disabled = false; }
+}
+function tryPage() {
+  const html = $('paste').value;
+  if (!html.trim()) { $('pasteOut').innerHTML = 'Paste a page first.'; return; }
+  const r = STANDARD.check(html);
+  $('pasteOut').innerHTML = `${r.pass ? '<span class="pass">It meets the house standard.</span>' : `<span class="fail">It fails ${r.rules.filter((x) => !x.pass).length} of 7.</span>`}<br>${r.rules.map((x) => `<span class="${x.pass ? 'pass' : 'fail'}">${x.id} ${esc(x.name)}</span>: ${esc(x.why)}`).join('<br>')}`;
+}
+
+const ready = (async () => {
+  const f = await getJSON('data/flagships.json');
+  if (f) Object.assign(S, { builds: f.builds, reuse: f.reuse, read: f.read });
+  S.gate = await getJSON('data/gates.json');
+  render();
+  $('recheck').addEventListener('click', reread);
+  $('tryPage').addEventListener('click', tryPage);
+  S.crystal = CRYSTAL.mount($('crystal'), { energy: 0.95 });
+  if (S.crystal) {
+    S.crystal.setFaces(S.faces.map((x) => x.state));
+    S.crystal.onHover((i) => { $('facet').innerHTML = i >= 0 && S.faces[i] && S.faces[i].text ? S.faces[i].text : S.rest; });
+    S.crystal.onPick((i) => { const el = S.faces[i] && S.faces[i].to ? $(S.faces[i].to) : null; if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth' }); });
+    HOUSE.bindScroll(S.crystal, 0.95);
+  }
+  if (typeof document.querySelectorAll === 'function') for (const el of document.querySelectorAll('[data-count]')) HOUSE.count(el, el.getAttribute('data-count'));
+  HOUSE.reveal(document); HOUSE.light(document);
+  if (typeof location !== 'undefined' && /^https?:$/.test(location.protocol)) reread();   // live, as soon as the page is open
+  if (typeof navigator !== 'undefined' && navigator.serviceWorker && typeof location !== 'undefined' && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+window.__house = { ready, S, render, reread, tryPage, faces };
+</script>
+</body>
+</html>

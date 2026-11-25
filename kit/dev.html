@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>crystal — dev</title>
+<style>html,body{margin:0;height:100%;background:#02070c;color:#e9f2f6;font:14px ui-monospace,monospace}canvas{position:fixed;inset:0;width:100%;height:100%;display:block}#o{position:fixed;left:16px;bottom:16px;z-index:2}</style></head>
+<body><canvas id="c"></canvas><div id="o">…</div>
+<script type="module">
+import C from './crystal.js';
+const o = document.getElementById('o');
+const h = C.mount(document.getElementById('c'), { energy: 1 });
+if (!h) { o.textContent = 'no crystal: WebGL or the shader failed'; }
+else {
+  const f = new Array(32).fill(0); for (let i = 0; i < 32; i++) f[i] = i % 7 === 0 ? 3 : i % 5 === 0 ? 2 : i % 2 ? 1 : 0;
+  h.setFaces(f);
+  h.onHover((i) => { o.textContent = i < 0 ? 'point at a face' : `face ${i} · state ${f[i]}`; });
+  h.onPick((i) => { f[i] = (f[i] + 1) % 4; h.setFaces(f); });
+  o.textContent = 'mounted';
+  window.__crystal = h;
+}
+</script></body></html>

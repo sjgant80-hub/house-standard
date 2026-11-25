@@ -1,0 +1,21 @@
+// make-seed.mjs — write seed.json, this repository's genome seed. Its judge's two cases are whole pages: one built to
+// the house standard, and the same page with its crystal taken out.
+//   node scripts/make-seed.mjs
+import { writeFileSync } from 'node:fs';
+
+const CREDIT = 'Powered by the Konomi architecture, created by Thomas Frumkin.';
+const page = (hero) => `<!doctype html><html><head><style>:root{--bg:#02070c;--cyan:#49e8c8;--gold:#ffcf6a;--red:#ff6b6b}body{font-family:'Hanken Grotesk'}h1{font-family:'Fraunces'}.n{font-family:'JetBrains Mono'}</style></head><body><header class="hero">${hero}<h1>It holds.</h1></header><div class="stats"><div class="stat"><div class="n">34 → 139</div><div class="lab">right, of 144</div><a class="src" href="data/run.json">receipt</a></div></div><div class="stack"><div class="srow"><div class="d">C1</div><div class="nm"><b>It holds</b><span class="tag cy">pass</span></div></div><div class="srow red"><div class="d">C2</div><div class="nm"><b>It squares</b><span class="tag rd">fail · kept</span></div></div></div><div class="glass"><button type="button">Re-run it</button></div><details class="honest"><summary>What this does and does not claim</summary><div class="in"><p><b>Narrow.</b> Arithmetic only.</p><p><b>One run.</b> One sealed run.</p><p><b>Small.</b> A 1B model.</p></div></details><footer>${CREDIT}</footer></body></html>`;
+const good = page('<canvas id="crystal"></canvas>');
+const seed = {
+  genome: '1', name: 'house-standard', kind: 'repo',
+  purpose: 'The one starting point for every repository in the estate: a dark design kit (a living crystal hero, receipt cards, a stack, a glass that runs on the visitor\'s device, an honest expander) and a ship gate that holds any built page to seven rules, so a page leads with numbers it can prove and keeps its limits one click away.',
+  lane: { id: 'house-standard-ship-gate', accepts: 'a built web page, as its HTML', refuses: 'anything that is not a page: there is nothing to hold to the standard' },
+  interface: { in: '{"html":"<!doctype html>…the whole page…"}', out: 'verified when the page meets all seven rules of the house standard; unverified when it fails any; refused when what is given is not a page' },
+  judge: { what: 'a page ships only when it has the kit, greets no one with a wall of text, sources every receipt, leaves nothing unfinished, shows its failures, wears the house identity and keeps the house rules', run: 'node genome/judge.mjs', cases: { good: { html: good }, bad: { html: page('') } } },
+  boundary: { run: 'node genome/lane.mjs', inLane: { html: good }, outOfLane: { html: 'the best pizza topping' }, escalate: 'kar' },
+  health: { run: 'node genome/health.mjs' },
+  tombstone: { apply: 'node genome/tombstone.mjs apply', restore: 'node genome/tombstone.mjs restore' },
+  provenance: { repo: 'sjgant80-hub/house-standard', by: 'Kar, for Simon Gant', born: '2026-11-25', grownFrom: 'the showcase page Simon Gant set as the reference' },
+};
+writeFileSync(new URL('../seed.json', import.meta.url), JSON.stringify(seed, null, 2) + '\n');
+console.log(`seed.json written; purpose ${seed.purpose.length} characters`);

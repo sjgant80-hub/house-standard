@@ -1,0 +1,36 @@
+{
+ "witness": "v0.6",
+ "total": 68,
+ "killed": 68,
+ "clean": true,
+ "files": {
+  "src/standard.mjs": {
+   "total": 42,
+   "killed": 42,
+   "ignored": 0,
+   "clean": true
+  },
+  "src/receipts.mjs": {
+   "total": 11,
+   "killed": 11,
+   "ignored": 0,
+   "clean": true
+  },
+  "src/flagship.mjs": {
+   "total": 7,
+   "killed": 7,
+   "ignored": 0,
+   "clean": true
+  },
+  "genome/cell.mjs": {
+   "total": 8,
+   "killed": 8,
+   "ignored": 0,
+   "clean": true
+  }
+ },
+ "nothingToMutate": {
+  "genome/io.mjs, judge.mjs, lane.mjs, health.mjs, tombstone.mjs": "the estate genome's hook template, byte for byte; gated in estate-genome (template/genome), exercised here by the birth check in CI",
+  "kit/crystal.js, kit/house.js": "the glass: they draw and move, and decide nothing. The one sum the crystal shares with the page (which face a point of the screen is on) is tested (test/kit.test.mjs); the picture is checked in a browser"
+ }
+}

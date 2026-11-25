@@ -1,0 +1,45 @@
+name: gate
+# The house standard is held to itself: tests (its own page must pass its own ship gate), the record of what was read
+# from each flagship, a mutation witness that must be CLEAN on every gated file, and the estate genome's birth check.
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.list.outputs.files }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: tests (the page build and the house standard among them)
+        run: node --test test/*.test.mjs
+      - name: the front door's numbers are a whole record, each flagship read at a named commit
+        run: node scripts/flagships.mjs --check
+      - name: the committed gate record lists every gated file, each CLEAN
+        run: node scripts/gates.mjs --record
+      - name: the gated files, for the mutation gate below
+        id: list
+        run: echo "files=$(node scripts/gates.mjs --list)" >> "$GITHUB_OUTPUT"
+  mutation:
+    needs: gate
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJSON(needs.gate.outputs.files) }}
+    name: mutation gate · ${{ matrix.file }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - name: CLEAN, with the counts as committed
+        run: |
+          git clone --depth 1 --branch v0.6 https://github.com/sjgant80-hub/witness.git .witness
+          node scripts/gates.mjs --witness .witness/witness.mjs --check --only "${{ matrix.file }}"
+  genome:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+      - uses: sjgant80-hub/estate-genome@v1

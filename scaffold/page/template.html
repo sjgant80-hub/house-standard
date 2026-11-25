@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>__TITLE__</title>
+<meta name="description" content="__LINE__ Every number is a sealed receipt you can re-derive in your browser.">
+<meta name="theme-color" content="#02070c">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+/*HOUSE_CSS*/
+</style>
+</head>
+<body>
+<header class="hero" id="top">
+  <canvas id="crystal" role="img" aria-label="A crystal of 32 faces. Each lit face is one of this build's claims: cyan when it passed, red when it failed, gold while it is still being sealed."></canvas>
+  <div class="hero-shade"></div>
+  <div class="wrap">
+    <p class="eyebrow">AI Native Solutions · __TITLE__</p>
+    <h1>__TITLE__, <em>proven.</em></h1>
+    <p class="sub">__LINE__</p>
+    <div class="cta"><a class="btn primary" href="#result">See the result →</a><a class="btn ghost" href="#glass">Judge it yourself</a></div>
+  </div>
+  <p class="facet" id="facet" aria-live="polite">Sealing now.</p>
+</header>
+
+<section class="pad" id="result">
+  <div class="wrap">
+    <p class="kline reveal">The result</p>
+    <h2 class="claim reveal">One sealed run. <b>Every number re-derived here.</b></h2>
+    <div class="stats" id="receipts">Sealing now.</div>
+  </div>
+</section>
+
+<section class="pad alt" id="claims">
+  <div class="wrap">
+    <p class="kline reveal">The claims, written down first</p>
+    <h2 class="claim reveal">The pass marks were fixed <b>before the run.</b></h2>
+    <div class="stack reveal" id="claimStack">Sealing now.</div>
+  </div>
+</section>
+
+<section class="pad proof" id="glass">
+  <div class="wrap">
+    <h2 class="hl reveal"><span class="a">Don't trust us.</span><br><span class="b">Judge it again.</span></h2>
+    <p class="sub2 reveal">Your browser reads the recorded run and rules on every claim with the same gated code.</p>
+    <div class="glass reveal" style="text-align:left"><h3>Judge the run in this tab</h3><div class="row"><button id="rejudge" class="btn primary" type="button">Judge it again</button></div><p class="out" id="rejudgeOut" aria-live="polite">Press the button.</p></div>
+    <details class="honest reveal"><summary>What this does — and doesn't — claim</summary><div class="in">
+      <p><b>One sealed run is one sealed run.</b> It says nothing about other inputs.</p>
+      <p><b>Nothing is claimed early.</b> A claim with no run behind it says "sealing now".</p>
+      <p><b>A failed claim stays.</b> It is kept on this page, in red.</p></div></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap frow">
+    <div><div class="brand">__TITLE__</div><div class="fnote">Built by Kar · MIT licence (holder Simon Gant) · supplied by <a href="https://www.ai-nativesolutions.com">AI Native Solutions</a><br>Powered by the Konomi architecture, created by Thomas Frumkin.</div></div>
+    <div class="taglist"><span>›</span> AI you own. Proof you can re-run.<br><span>›</span> Verify or dissolve, shown.</div>
+  </div>
+</footer>
+<script type="module">
+/*KERNELS*/
+
+/*APP*/
+</script>
+</body>
+</html>
