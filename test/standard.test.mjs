@@ -52,6 +52,13 @@ test('H2 the law of the page: no paragraph of prose greets a visitor, and the de
   assert.match(only(page({ prose: `<p>${lorem(46)}</p>` }), 'H2'), /the longest paragraph is 46 words \(at most 45\)/);
   // prose behind a click does not greet anyone
   assert.equal(rule(page({ honest: `<details class="honest"><summary>more</summary><div class="in"><p>${lorem(400)}</p><p>b</p><p>c</p></div></details>` }), 'H2').pass, true);
+  // ...however deep: an expander inside an expander does not cut the outer one short, and what follows it is still folded
+  const nested = `<details class="honest"><summary>more</summary><div class="in"><p>a</p><details><summary>inner</summary><p>${lorem(90)}</p></details><p>${lorem(120)}</p><details><summary>two</summary><details><summary>three deep</summary><p>${lorem(70)}</p></details></details><p>b</p><p>c</p></div></details>`;
+  assert.equal(rule(page({ honest: nested }), 'H2').pass, true, 'the 120 words after the inner expander are still behind the outer click');
+  assert.equal(S.measure(page({ honest: nested })).longest, S.measure(page()).longest); assert.equal(S.measure(page({ honest: nested })).viewWords, S.measure(page()).viewWords, 'nothing inside it counts as greeting the visitor');
+  assert.equal(S.measure(page({ honest: nested })).limits, 6, 'and every limit inside the outer expander is counted, to its own end');
+  assert.equal(rule(page({ prose: `<details><summary>x</summary><p>in</p></details><p>${lorem(50)}</p>` }), 'H2').pass, false, 'what comes after a closed expander greets the visitor');
+  assert.equal(rule(page({ prose: `<details><summary>never closed</summary><p>${lorem(50)}</p>` }), 'H2').pass, false, 'an expander that is never closed folds nothing');
   // many short paragraphs still make a wall
   const many = Array.from({ length: 40 }, () => `<p>${lorem(40)}</p>`).join('');
   assert.match(only(page({ prose: many }), 'H2'), /^1\d\d\d words before any click \(at most 1250\)/);
@@ -96,8 +103,10 @@ test('H6 one identity and H7 house rules', () => {
   assert.equal(only(page({ footer: 'no credit' }), 'H7'), 'the credit line is missing; no price; no private shorthand');
   for (const price of ['£49 a month', '$ 9', '€5', 'per seat', 'per user', 'per month', 'Pricing']) assert.match(only(page({ prose: `<p>${price}</p>` }), 'H7'), /a price is on the page/, price);
   assert.equal(rule(page({ prose: '<p>no charge at all, on the machine you own</p>' }), 'H7').pass, true);
-  for (const sign of ['κ', 'φ', '◊', 'a torus of light']) assert.match(only(page({ prose: `<p>${sign}</p>` }), 'H7'), /private shorthand is on the page$/, sign);
-  assert.equal(rule(page({ prose: '<p>the history of storus</p>' }), 'H7').pass, true);
+  const word = ['to', 'rus'].join('');
+  for (const sign of ['κ', 'φ', '◊', `a ${word} of light`, `A ${word.toUpperCase()}.`]) assert.match(only(page({ prose: `<p>${sign}</p>` }), 'H7'), /private shorthand is on the page$/, sign);
+  assert.equal(rule(page({ prose: `<p>the history of s${word}, and ${word}es</p>` }), 'H7').pass, true, 'inside a longer word it is another word');
+  assert.equal(rule(page({ prose: '<p>λ and π are other letters</p>' }), 'H7').pass, true);
 });
 
 test('what is not a page fails every rule, and nothing thrown at it breaks it', () => {

@@ -10,7 +10,7 @@ away, and is never a wall of text.
 | **7** | rules a built page is held to, by code (`src/standard.mjs`) |
 | **5** | parts every page is built from: crystal hero, receipts, stack, glass, honest expander |
 | **0** | numbers typed by hand on the front door: each is read from the page that proves it |
-| **68 / 68** | planted bugs caught in this repository's own kernels ([the record](data/gates.json)) |
+| **70 / 70** | planted bugs caught in this repository's own kernels ([the record](data/gates.json)) |
 
 ## Use it
 

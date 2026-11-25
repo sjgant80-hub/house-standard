@@ -16,6 +16,8 @@ export const LIMITS = { paragraph: 45, view: 1250, limits: 3 };
 export const NAMES = { H1: 'The kit', H2: 'The law of the page', H3: 'Receipts', H4: 'Nothing unfinished', H5: 'The fail-wall', H6: 'One identity', H7: 'House rules' };
 const TOKENS = ['#02070c', '#49e8c8', '#ffcf6a', '#ff6b6b'], FACES = ['Fraunces', 'Hanken Grotesk', 'JetBrains Mono'];
 const CREDIT = 'Powered by the Konomi architecture, created by Thomas Frumkin.';
+// three signs and one word that stay off public pages, written here so that this file does not carry them either
+const SHORTHAND = new RegExp(`[\\u03ba\\u03c6\\u25ca]|\\b${['to', 'rus'].join('')}\\b`, 'i');
 
 const str = (x) => (typeof x === 'string' ? x : '');
 const strip = (s) => s.replace(/<[^>]+>/g, ' ');
@@ -23,9 +25,15 @@ const words = (s) => strip(s).split(/\s+/).filter(Boolean).length;
 const count = (s, re) => (s.match(re) || []).length;
 // body(html) → what a visitor is shown: the body, without scripts and styles
 const body = (html) => { const a = html.search(/<body[\s>]/i); return (a < 0 ? '' : html.slice(a)).replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' '); };
-// blocks(s, cls) → the inner HTML of every element whose class list holds cls (matched to its own closing tag)
-function blocks(s, cls) {
-  const out = [], open = new RegExp(`<([a-z0-9]+)\\b[^>]*\\bclass="[^"]*(?<![\\w-])${cls}(?![\\w-])[^"]*"[^>]*>`, 'gi');
+// folded(s) → s without what waits behind a click: every expander goes, however deep expanders sit inside expanders
+// (the innermost go first, so an outer one is never cut short at an inner one's end)
+function folded(s) {
+  for (;;) { const t = s.replace(/<details\b(?:(?!<details\b)[\s\S])*?<\/details>/gi, ' '); if (t === s) return s; s = t; }
+}
+// blocks(s, cls, tag) → the inner HTML of every element (of that tag, if one is named) whose class list holds cls,
+// each matched to its own closing tag
+function blocks(s, cls, tag) {
+  const out = [], open = new RegExp(`<(${tag || '[a-z0-9]+'})\\b[^>]*\\bclass="[^"]*(?<![\\w-])${cls}(?![\\w-])[^"]*"[^>]*>`, 'gi');
   for (let m = open.exec(s); m !== null; m = open.exec(s)) {
     const tag = m[1].toLowerCase(), tags = new RegExp(`<(/?)${tag}\\b[^>]*>`, 'gi');
     tags.lastIndex = open.lastIndex;
@@ -38,9 +46,9 @@ function blocks(s, cls) {
 
 export function measure(html) {
   const page = str(html), b = body(page);
-  const open = b.replace(/<details[\s\S]*?<\/details>/gi, ' ').replace(/<svg[\s\S]*?<\/svg>/gi, ' ').replace(/<select[\s\S]*?<\/select>/gi, ' ');
+  const open = folded(b).replace(/<svg[\s\S]*?<\/svg>/gi, ' ').replace(/<select[\s\S]*?<\/select>/gi, ' ');
   const paragraphs = [...open.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => words(m[1]));
-  const stats = blocks(b, 'stat'), honest = [...b.matchAll(/<details\b[^>]*\bclass="[^"]*\bhonest\b[^"]*"[^>]*>([\s\S]*?)<\/details>/gi)].map((m) => m[1]);
+  const stats = blocks(b, 'stat'), honest = blocks(b, 'honest', 'details');
   const glass = blocks(b, 'glass');
   return {
     crystal: /<canvas\b[^>]*\bid="crystal"/i.test(b), receipts: stats.length, stackRows: blocks(b, 'srow').length, glass: glass.length,
@@ -51,7 +59,7 @@ export function measure(html) {
     unfinished: count(strip(b), /not measured yet|lorem ipsum|coming soon|\bTODO\b|\bTBD\b/gi),
     shown: /class="[^"]*\b(tag rd|fail|bad)\b/.test(b) || /sealing now/i.test(b),
     tokens: TOKENS.filter((t) => page.toLowerCase().includes(t)).length, faces: FACES.filter((f) => page.includes(f)).length,
-    credit: b.includes(CREDIT), priced: /[£$€]\s?\d|\bper (seat|user|month)\b|\bpricing\b/i.test(strip(b)), shorthand: /[κφ◊]|\btorus\b/i.test(b),
+    credit: b.includes(CREDIT), priced: /[£$€]\s?\d|\bper (seat|user|month)\b|\bpricing\b/i.test(strip(b)), shorthand: SHORTHAND.test(b),
   };
 }
 
