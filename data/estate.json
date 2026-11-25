@@ -1,0 +1,81 @@
+{
+ "v": "house-standard-estate/1",
+ "indexed": "2026-11-22",
+ "org": "sjgant80-hub",
+ "public": 1784,
+ "live": 1586,
+ "shelf": [
+  {
+   "row": "Proof",
+   "repo": "witness",
+   "line": "A build gate that catches tests which prove nothing.",
+   "url": "https://sjgant80-hub.github.io/witness/"
+  },
+  {
+   "row": "Proof",
+   "repo": "kar-scopeguard",
+   "line": "Did the coding agent get its green honestly?",
+   "url": "https://sjgant80-hub.github.io/kar-scopeguard/"
+  },
+  {
+   "row": "Proof",
+   "repo": "proven-shelf",
+   "line": "A badge that means one thing: this proof re-runs.",
+   "url": "https://sjgant80-hub.github.io/proven-shelf/"
+  },
+  {
+   "row": "Proof",
+   "repo": "estate-genome",
+   "line": "The birth check every part must pass.",
+   "url": "https://sjgant80-hub.github.io/estate-genome/"
+  },
+  {
+   "row": "Own the model",
+   "repo": "fallforgemint",
+   "line": "Bring a task; walk out owning the model.",
+   "url": "https://sjgant80-hub.github.io/fallforgemint/"
+  },
+  {
+   "row": "Own the model",
+   "repo": "slm-suite",
+   "line": "Industry small models with a verified library.",
+   "url": "https://sjgant80-hub.github.io/slm-suite/"
+  },
+  {
+   "row": "Own the model",
+   "repo": "kardlings",
+   "line": "A card that is a working mind you own.",
+   "url": "https://sjgant80-hub.github.io/kardlings/"
+  },
+  {
+   "row": "Own the model",
+   "repo": "liveware",
+   "line": "Verify a living system in your browser.",
+   "url": "https://sjgant80-hub.github.io/liveware/"
+  },
+  {
+   "row": "Sovereign tools",
+   "repo": "konomium-vault",
+   "line": "Encrypted accounts: vault, bank ingest, tax.",
+   "url": "https://sjgant80-hub.github.io/konomium-vault/"
+  },
+  {
+   "row": "Sovereign tools",
+   "repo": "falljustice",
+   "line": "UK consumer claims, with cited law.",
+   "url": "https://sjgant80-hub.github.io/falljustice/"
+  },
+  {
+   "row": "Sovereign tools",
+   "repo": "divorcerbot",
+   "line": "UK divorce self-help on verified law.",
+   "url": "https://sjgant80-hub.github.io/divorcerbot/"
+  },
+  {
+   "row": "Sovereign tools",
+   "repo": "sovereign-browser",
+   "line": "One governed AI of your own, on any site.",
+   "url": "https://sjgant80-hub.github.io/sovereign-browser/"
+  }
+ ]
+}

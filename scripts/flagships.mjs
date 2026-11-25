@@ -29,12 +29,16 @@ if (process.argv[1] && process.argv[1].endsWith('flagships.mjs')) {
     const dir = `${home}/${b.repo}`.replace(/\/+/g, '/');
     if (!existsSync(`${dir}/index.html`)) throw new Error(`${b.repo}: no built page at ${dir}`);
     const commit = execFileSync('git', ['-C', dir, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
-    return { ...b, live: `https://sjgant80-hub.github.io/${b.repo}/`, commit, ...read(b.repo, readFileSync(`${dir}/index.html`, 'utf8')) };
+    const g = existsSync(`${dir}/data/gates.json`) ? JSON.parse(readFileSync(`${dir}/data/gates.json`, 'utf8')) : null;
+    return { ...b, live: `https://sjgant80-hub.github.io/${b.repo}/`, commit, ...read(b.repo, readFileSync(`${dir}/index.html`, 'utf8')), gate: g && Number.isInteger(g.killed) ? { killed: g.killed, total: g.total, clean: g.clean === true } : null };
   });
   // one receipt lives in a record, not on a page: how much of the harvest's work was taken over from work already done
   const parity = `${home}/the-distillation/data/parity.json`.replace(/\/+/g, '/');
   const reuse = existsSync(parity) ? (() => { const g = JSON.parse(readFileSync(parity, 'utf8')).grown; return { taken: g.tokens_taken_over, worked: g.tokens_worked_out }; })() : null;
   const gates = existsSync(at('data/gates.json')) ? JSON.parse(readFileSync(at('data/gates.json'), 'utf8')) : null;
-  writeFileSync(at('data/flagships.json'), JSON.stringify({ v: 'house-standard-flagships/1', read: new Date().toISOString().slice(0, 10), builds, reuse, gate: gates ? { killed: gates.killed, total: gates.total, clean: gates.clean } : null }, null, 1) + '\n');
+  const devPath = `${home}/the-distillation/data/dev/verdict.json`.replace(/\/+/g, '/'), livePath = `${home}/the-distillation/data/live.json`.replace(/\/+/g, '/');
+  const dv = existsSync(devPath) ? JSON.parse(readFileSync(devPath, 'utf8')) : null, dev = dv && dv.cold ? { cold: { n: dv.cold.n, base: { right: dv.cold.base.right }, distilled: { right: dv.cold.distilled.right } } } : null;
+  const loop = existsSync(livePath) ? JSON.parse(readFileSync(livePath, 'utf8')) : null;
+  writeFileSync(at('data/flagships.json'), JSON.stringify({ v: 'house-standard-flagships/1', read: new Date().toISOString().slice(0, 10), builds, reuse, dev, loop, gate: gates ? { killed: gates.killed, total: gates.total, clean: gates.clean } : null }, null, 1) + '\n');
   for (const b of builds) console.log(`${b.standard.pass ? 'PASS' : 'FAIL'} ${b.repo}@${b.commit.slice(0, 7)} · ${b.headline ? `${b.headline.was} → ${b.headline.now} of ${b.headline.of}` : 'no headline receipt on its page'} · claims ${b.claims.pass} pass, ${b.claims.fail} fail, ${b.claims.sealing} sealing · ${b.standard.viewWords} words before a click`);
 }

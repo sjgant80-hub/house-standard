@@ -15,7 +15,7 @@ export const KERNELS = [
   ['CRYSTAL', 'kit/crystal.js'], ['HOUSE', 'kit/house.js'], ['STANDARD', 'src/standard.mjs'], ['RECEIPTS', 'src/receipts.mjs'], ['FLAGSHIP', 'src/flagship.mjs'],
 ];
 // what bake() writes into the page: these ids, and every data-bind. What a visitor does on the page is their own.
-export const BAKED = ['facet', 'receipts', 'builds', 'stackRows', 'wins', 'wall', 'readLine'];
+export const BAKED = ['facet', 'ring', 'rsiReceipts', 'receipts', 'builds', 'stackRows', 'wins', 'estateStats', 'shelf', 'wall', 'readLine'];
 const LF = (s) => s.split('\r\n').join('\n');
 const nsOf = (spec, from) => {
   const name = spec.split('/').pop();

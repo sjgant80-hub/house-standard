@@ -8,12 +8,51 @@ const bind = (k, html) => { for (const el of document.querySelectorAll(`[data-bi
 const getText = async (p) => { try { const r = await fetch(p); return r.ok ? await r.text() : null; } catch { return null; } };
 const getJSON = async (p) => { const t = await getText(p); try { return t === null ? null : JSON.parse(t); } catch { return null; } };
 const SEALING = '<span class="tag gd">sealing now</span>';
-const S = { builds: [], reuse: null, gate: null, read: null, live: null, crystal: null, faces: [] };
+const S = { builds: [], reuse: null, gate: null, read: null, live: null, crystal: null, faces: [], estate: null, loop: null, dev: null };
 const B = (repo) => S.builds.find((b) => b.repo === repo) || null;
 const src = (b, what) => `<a class="src" href="${b.live}">receipt: ${esc(what)} ↗</a>`;
 const LAYERS = [['D0', 'Substrate', 'the 1B model, and the few facts it gets right cold'], ['D1', 'Bond-check', 'verifies every step; dissolves what it cannot prove'], ['D2', 'Trajectory', 'splits a stuck step until the model cannot get it wrong'], ['D3', 'Crystal', 'grows verified answers in parallel, reusing proven work'], ['D4', 'Fuzzer', 'attacks its own verifier so no false bond can form'], ['D5', 'Distillation', 'learns from its own verified traces to get better cold'], ['D6', 'You', 'nothing irreversible, and no new weights, without your grant']];
 
+// ── self-improvement, shown: the loop as a ring, the round as it runs, and what has landed ──
+const RING = [['harvest', 'Harvest'], ['build', 'Verify'], ['train', 'Distil'], ['cold-base', 'Test cold'], ['judged', 'Adopt or dissolve'], ['grant', 'A person\'s grant']];
+function renderLoop() {
+  const l = S.loop, d = B('the-distillation'), stage = l && l.stage === 'cold-distilled' ? 'cold-base' : l ? l.stage : null, at = RING.findIndex(([k]) => k === stage), running = l && at >= 0 && !l.done && !l.failed;
+  const pt = (i) => { const a = -Math.PI / 2 + i * Math.PI / 3; return [300 + 118 * Math.cos(a), 150 + 118 * Math.sin(a)]; };
+  const nodes = RING.map(([, name], i) => { const [x, y] = pt(i), on = running && i === at, past = (l && l.done) || (running && i < at); const tx = x + (x > 310 ? 16 : x < 290 ? -16 : 0), anchor = x > 310 ? 'start' : x < 290 ? 'end' : 'middle', ty = y + (anchor === 'middle' ? (y < 150 ? -16 : 26) : 4);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${on ? 9 : 6}" fill="${on ? '#ffcf6a' : past ? '#49e8c8' : '#02070c'}" stroke="${on ? '#ffcf6a' : past ? '#49e8c8' : '#6f8698'}" stroke-width="2"/><text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor}" fill="${on ? '#ffcf6a' : past ? '#e9f2f6' : '#aebecb'}">${name}</text>`; }).join('');
+  $('ring').innerHTML = `<svg viewBox="0 0 600 300" style="width:100%;max-width:640px;height:auto;display:block;margin:0 auto 8px" role="img" aria-label="The loop: harvest, verify, distil, test cold, adopt or dissolve, a person's grant, and round again.${running ? ` Now at: ${RING[at][1]}.` : ''}"><style>text{font:500 12px 'JetBrains Mono',ui-monospace,monospace}@keyframes orbit{to{transform:rotate(360deg)}}.orb{transform-origin:300px 150px;animation:orbit 14s linear infinite}@media(prefers-reduced-motion:reduce){.orb{animation:none}}</style><circle cx="300" cy="150" r="118" fill="none" stroke="rgba(255,255,255,.1)"/><g class="orb"><circle cx="300" cy="32" r="3" fill="#49e8c8"/><path d="M300 32A118 118 0 0 0 244 46" fill="none" stroke="#49e8c8" stroke-width="1.5" opacity=".5"/></g>${nodes}<text x="300" y="146" text-anchor="middle" fill="#e9f2f6" style="font:500 15px 'JetBrains Mono',monospace">${running ? 'running now' : l && l.done ? 'round judged' : 'between rounds'}</text><text x="300" y="166" text-anchor="middle" fill="#6f8698">${l && l.round ? (l.round === 'dev' ? 'development round' : `round ${l.round}`) : 'the loop'}</text></svg>`;
+  let line = 'No round is running right now.';
+  if (l && l.stage && l.stage !== 'idle') {
+    const what = l.round === 'dev' ? 'The development round' : `Round ${l.round}`, t = l.train, h = l.harvest, c = l.stage === 'cold-distilled' ? l.cold.distilled : l.cold && l.cold.base;
+    line = `${what} is starting.`;
+    if (l.stage === 'harvest' && h) line = `${what}: <b>${h.done} of ${h.total}</b> problems worked under the checker · ${h.complete} finished.`;
+    if (l.stage === 'build') line = `${what}: <b>${l.examples}</b> verified examples built.`;
+    if (l.stage === 'train' && t) line = `${what}: learning its own verified working · <b>step ${t.step} of ${t.steps}</b>${t.loss.length ? ` · training loss ${t.loss[0].toFixed(3)} → ${t.loss[t.loss.length - 1].toFixed(3)}` : ''}.`;
+    if ((l.stage === 'cold-base' || l.stage === 'cold-distilled') && c) line = `${what}: held-out problems, cold, ${l.stage === 'cold-base' ? 'before' : 'after'} training · <b>${c.done} of ${c.total}</b>.`;
+    if (l.stage === 'judged') line = `${what}: judged. The numbers appear here once every record has been checked again.`;
+    if (t && t.loss.length > 1) { const top = Math.max(...t.loss, 0.001), pts = t.loss.map((y, i) => `${(i / (t.loss.length - 1) * 300).toFixed(1)},${(58 - 54 * Math.min(1, y / top)).toFixed(1)}`).join(' '); line += `<svg class="spark" viewBox="0 0 300 60" preserveAspectRatio="none" role="img" aria-label="Training loss, falling."><polyline points="${pts}" fill="none" stroke="#49e8c8" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="dim" style="font-size:11.5px">training loss on its own verified working</span>`; }
+    line += `<br><span class="dim" style="font-size:11.5px">as of ${esc(String(l.at || '').replace('T', ' ').slice(0, 16))} UTC · <a href="${d ? d.live : '#'}" style="color:inherit">open the build</a></span>`;
+  }
+  $('liveBox').innerHTML = line;
+  const h = d && d.headline, dv = S.dev && S.dev.cold;
+  const src = d ? `<a class="src" href="${d.live}">receipt: the distillation ↗</a>` : '';
+  $('rsiReceipts').innerHTML = (h ? `<div class="stat reveal"><div class="n"><span class="was">${esc(h.was)}</span><span class="arrow">→</span><span class="now">${esc(h.now)}</span></div><div class="lab"><b>Right, cold, on ${h.of} unseen problems.</b> The same model, before and after one round of its own verified work.</div>${src}</div>` : `<div class="stat reveal"><div class="n"><span class="was">—</span><span class="arrow">→</span><span class="wait">—</span></div><div class="lab"><b>Round 1, cold, on unseen problems.</b> The number lands here, pass or fail. ${SEALING}</div></div>`)
+    + (dv ? `<div class="stat reveal"><div class="n"><span class="was">${dv.base.right}</span><span class="arrow">→</span><span class="${dv.distilled.right > dv.base.right ? 'wait' : 'bad'}">${dv.distilled.right}</span></div><div class="lab"><b>The development round</b>, of ${dv.n} unseen problems. It shaped the settings and is not a claim. <span class="tag gd">not a claim</span></div>${d ? `<a class="src" href="${d.live}data/dev/verdict.json">receipt: its verdict ↗</a>` : ''}</div>` : `<div class="stat reveal"><div class="n"><span class="wait">6</span></div><div class="lab"><b>Claims written down first.</b> Lift, still honest, the wall moved, verify-or-dissolve, clean data, held-out integrity. ${SEALING}</div>${d ? `<a class="src" href="${d.live}CLAIMS.md">receipt: the claims ↗</a>` : ''}</div>`)
+    + `<div class="stat reveal"><div class="n"><span class="now">0</span></div><div class="lab"><b>Changes to the model without a person.</b> Adopted weights wait for a recorded grant, by design and by test.</div>${d ? `<a class="src" href="${d.live}#loop">receipt: the gate at the weights ↗</a>` : ''}</div>`;
+}
+function renderEstate() {
+  const e = S.estate;
+  if (!e) { $('estateStats').innerHTML = ''; $('shelf').innerHTML = ''; return; }
+  const src = `<a class="src" href="https://github.com/${esc(e.org)}?tab=repositories">receipt: the repositories, indexed ${esc(e.indexed)} ↗</a>`;
+  const gates = S.builds.filter((b) => b.gate), killed = gates.reduce((a, b) => a + b.gate.killed, 0) + (S.gate ? S.gate.killed : 0), total = gates.reduce((a, b) => a + b.gate.total, 0) + (S.gate ? S.gate.total : 0);
+  $('estateStats').innerHTML = `<div class="stat reveal"><div class="n"><span class="now" data-count="${e.public.toLocaleString('en')}">${e.public.toLocaleString('en')}</span></div><div class="lab"><b>Public repositories.</b> Every one readable, forkable, yours to run.</div>${src}</div>`
+    + `<div class="stat reveal"><div class="n"><span class="now" data-count="${e.live.toLocaleString('en')}">${e.live.toLocaleString('en')}</span></div><div class="lab"><b>Live pages.</b> Most run whole in a browser tab, on your own device.</div>${src}</div>`
+    + `<div class="stat reveal"><div class="n"><span class="now">${killed.toLocaleString('en')}</span><span class="was" style="font-size:.42em"> /${total.toLocaleString('en')}</span></div><div class="lab"><b>Planted bugs caught</b> across these builds' mutation gates. A bug the tests miss means it does not ship.</div><a class="src" href="data/gates.json">receipt: this page's own gate ↗</a></div>`;
+  $('shelf').innerHTML = e.shelf.map((r, i) => `<a class="srow" href="${r.url}" style="text-decoration:none"><div class="d">${esc(r.row.split(' ')[0].toUpperCase().slice(0, 5))}</div><div class="nm"><b>${esc(r.repo)}</b><span>${esc(r.line)}</span><span class="tag cy">live ↗</span></div></a>`).join('');
+}
+
 function render() {
+  renderLoop(); renderEstate();
   const v = B('the-verifier-set'), c = B('the-crystal'), d = B('the-distillation');
   const u = v && v.extra.find((x) => x.key === 'unanswerable'), f = c && c.extra.find((x) => x.key === 'forged');
   const none = (lab) => `<div class="stat reveal"><div class="n"><span class="wait">—</span></div><div class="lab">${lab} ${SEALING}</div></div>`;
@@ -50,6 +89,7 @@ function faces() {
   const out = [], v = B('the-verifier-set'), c = B('the-crystal'), d = B('the-distillation');
   const add = (state, text, to) => out.push({ state, text, to });
   const u = v && v.extra.find((x) => x.key === 'unanswerable'), f = c && c.extra.find((x) => x.key === 'forged');
+  add(d && d.headline ? 1 : 2, d && d.headline ? `<b>Self-improvement · ${esc(d.headline.was)} → ${esc(d.headline.now)}</b> cold, on ${d.headline.of} unseen problems` : '<b>Self-improvement</b> · round 1 · sealing now', 'rsi');
   add(u ? 1 : 2, u ? `<b>${esc(u.value)} → ${esc(u.after)}</b> · confident numbers to questions with no answer` : 'sealing now', 'result');
   add(v && v.headline ? 1 : 2, v && v.headline ? `<b>${esc(v.headline.was)} → ${esc(v.headline.now)}</b> of ${v.headline.of} sealed problems · The Verifier Set` : 'sealing now', 'result');
   add(f ? 1 : 2, f ? `<b>${esc(f.value)} of ${f.of.toLocaleString('en')}</b> forged replies got past the check · The Crystal` : 'sealing now', 'result');
@@ -75,6 +115,8 @@ async function reread() {
       if (!FLAGSHIP.same(now, b)) live.differ++;
       Object.assign(b, now);
     }
+    for (const b of S.builds) { const g = await getJSON(`../${b.repo}/data/gates.json`); if (g && Number.isInteger(g.killed) && Number.isInteger(g.total)) b.gate = { killed: g.killed, total: g.total, clean: g.clean === true }; }
+    const dv = await getJSON('../the-distillation/data/dev/verdict.json'); if (dv && dv.cold) S.dev = { cold: { n: dv.cold.n, base: { right: dv.cold.base.right }, distilled: { right: dv.cold.distilled.right } } };
     const p = await getJSON('../the-distillation/data/parity.json');
     if (p && p.grown) S.reuse = { taken: p.grown.tokens_taken_over, worked: p.grown.tokens_worked_out };
     S.live = live.got === 0 ? { tried: 0, got: 0, differ: 0 } : live;
@@ -91,7 +133,8 @@ function tryPage() {
 
 const ready = (async () => {
   const f = await getJSON('data/flagships.json');
-  if (f) Object.assign(S, { builds: f.builds, reuse: f.reuse, read: f.read });
+  if (f) Object.assign(S, { builds: f.builds, reuse: f.reuse, read: f.read, dev: f.dev || null, loop: f.loop || null });
+  S.estate = await getJSON('data/estate.json');
   S.gate = await getJSON('data/gates.json');
   render();
   $('recheck').addEventListener('click', reread);
@@ -105,7 +148,8 @@ const ready = (async () => {
   }
   if (typeof document.querySelectorAll === 'function') for (const el of document.querySelectorAll('[data-count]')) HOUSE.count(el, el.getAttribute('data-count'));
   HOUSE.reveal(document); HOUSE.light(document);
-  if (typeof location !== 'undefined' && /^https?:$/.test(location.protocol)) reread();   // live, as soon as the page is open
+  const loop = async () => { const l = await getJSON(`../the-distillation/data/live.json?${Date.now()}`); if (l && l.stage) { S.loop = l; renderLoop(); HOUSE.reveal(document); if (S.crystal && !l.done && !l.failed && l.stage !== 'idle') S.crystal.setEnergy(1.2); } };
+  if (typeof location !== 'undefined' && /^https?:$/.test(location.protocol)) { reread(); loop(); if (typeof setInterval === 'function') setInterval(loop, 60000); }   // live, as soon as the page is open, and kept live
   if (typeof navigator !== 'undefined' && navigator.serviceWorker && typeof location !== 'undefined' && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 window.__house = { ready, S, render, reread, tryPage, faces };

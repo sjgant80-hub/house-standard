@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AI you own. Proof you can re-run.</title>
+<title>AI that teaches itself. Only what it can prove.</title>
 <meta name="description" content="A small AI that gives you an answer, or admits it can't. It runs on your own machine. Every number on this page is read live from the sealed page that proves it, and every build can be re-run in your browser.">
 <meta name="theme-color" content="#02070c">
 <link rel="manifest" href="manifest.webmanifest">
@@ -98,6 +98,9 @@ a.act:hover,.act.lift:hover{border-color:var(--cyan);transform:translateY(-4px);
 .srow .nm span{color:var(--soft);font-size:14px;min-width:0;overflow-wrap:anywhere}
 .srow.red .d{color:var(--red)}.srow.gold .d{color:var(--gold)}
 .tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.tag.off{color:var(--muted);border:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.spark{display:block;width:100%;max-width:520px;height:64px;margin:12px 0 0}
 .tag.cy{color:var(--cyan);border:1px solid rgba(73,232,200,.32)}
 .tag.gd{color:var(--gold);border:1px solid rgba(255,207,106,.34);animation:breathe 2.4s ease-in-out infinite}
 .tag.rd{color:var(--red);border:1px solid rgba(255,107,107,.4)}
@@ -164,14 +167,33 @@ footer{border-top:1px solid var(--line2);padding-block:46px;position:relative;z-
   <div class="hero-shade"></div>
   <div class="wrap">
     <p class="eyebrow">AI Native Solutions</p>
-    <h1>AI you <em>own.</em><br>Proof you can <em>re-run.</em></h1>
-    <p class="sub">A small AI that gives you an answer, or admits it can't. It runs on your own machine, and nothing leaves your browser.</p>
-    <div class="cta"><a class="btn primary" href="https://sjgant80-hub.github.io/the-verifier-set/">See it refuse to lie →</a><a class="btn ghost" href="#result">How it works</a></div>
+    <h1>AI that <em>teaches itself.</em><br>Only what it can <em>prove.</em></h1>
+    <p class="sub">A small model checks its own work, learns only from the part it verified, and is tested cold before any change stands. On your own machine.</p>
+    <div class="cta"><a class="btn primary" href="#rsi">Watch it learn →</a><a class="btn ghost" href="https://sjgant80-hub.github.io/the-verifier-set/">See it refuse to lie</a></div>
   </div>
-  <p class="facet" id="facet" aria-live="polite">14 receipts sealed · 2 sealing now · 1 failed and kept · 4 pages still to rebuild · point at a face</p>
+  <p class="facet" id="facet" aria-live="polite">14 receipts sealed · 3 sealing now · 1 failed and kept · 4 pages still to rebuild · point at a face</p>
 </header>
 
-<section class="pad" id="result">
+<section class="pad" id="rsi">
+  <div class="wrap">
+    <p class="kline reveal">Self-improvement, shown</p>
+    <h2 class="claim reveal">A model that improves itself, <b>with the brakes <em>built in.</em></b></h2>
+    <div class="glass reveal">
+      <h3>The loop, live</h3>
+      <p class="hint">The real round, as it runs on one laptop. Telemetry, not a result.</p>
+      <div id="ring"><svg viewBox="0 0 600 300" style="width:100%;max-width:640px;height:auto;display:block;margin:0 auto 8px" role="img" aria-label="The loop: harvest, verify, distil, test cold, adopt or dissolve, a person's grant, and round again."><style>text{font:500 12px 'JetBrains Mono',ui-monospace,monospace}@keyframes orbit{to{transform:rotate(360deg)}}.orb{transform-origin:300px 150px;animation:orbit 14s linear infinite}@media(prefers-reduced-motion:reduce){.orb{animation:none}}</style><circle cx="300" cy="150" r="118" fill="none" stroke="rgba(255,255,255,.1)"/><g class="orb"><circle cx="300" cy="32" r="3" fill="#49e8c8"/><path d="M300 32A118 118 0 0 0 244 46" fill="none" stroke="#49e8c8" stroke-width="1.5" opacity=".5"/></g><circle cx="300.0" cy="32.0" r="6" fill="#02070c" stroke="#6f8698" stroke-width="2"/><text x="300.0" y="16.0" text-anchor="middle" fill="#aebecb">Harvest</text><circle cx="402.2" cy="91.0" r="6" fill="#02070c" stroke="#6f8698" stroke-width="2"/><text x="418.2" y="95.0" text-anchor="start" fill="#aebecb">Verify</text><circle cx="402.2" cy="209.0" r="6" fill="#02070c" stroke="#6f8698" stroke-width="2"/><text x="418.2" y="213.0" text-anchor="start" fill="#aebecb">Distil</text><circle cx="300.0" cy="268.0" r="6" fill="#02070c" stroke="#6f8698" stroke-width="2"/><text x="300.0" y="294.0" text-anchor="middle" fill="#aebecb">Test cold</text><circle cx="197.8" cy="209.0" r="6" fill="#02070c" stroke="#6f8698" stroke-width="2"/><text x="181.8" y="213.0" text-anchor="end" fill="#aebecb">Adopt or dissolve</text><circle cx="197.8" cy="91.0" r="6" fill="#02070c" stroke="#6f8698" stroke-width="2"/><text x="181.8" y="95.0" text-anchor="end" fill="#aebecb">A person's grant</text><text x="300" y="146" text-anchor="middle" fill="#e9f2f6" style="font:500 15px 'JetBrains Mono',monospace">between rounds</text><text x="300" y="166" text-anchor="middle" fill="#6f8698">the loop</text></svg></div>
+      <div class="out" id="liveBox" aria-live="polite">Reading the loop…</div>
+    </div>
+    <div class="stats" id="rsiReceipts"><div class="stat reveal"><div class="n"><span class="was">—</span><span class="arrow">→</span><span class="wait">—</span></div><div class="lab"><b>Round 1, cold, on unseen problems.</b> The number lands here, pass or fail. <span class="tag gd">sealing now</span></div></div><div class="stat reveal"><div class="n"><span class="wait">6</span></div><div class="lab"><b>Claims written down first.</b> Lift, still honest, the wall moved, verify-or-dissolve, clean data, held-out integrity. <span class="tag gd">sealing now</span></div><a class="src" href="https://sjgant80-hub.github.io/the-distillation/CLAIMS.md">receipt: the claims ↗</a></div><div class="stat reveal"><div class="n"><span class="now">0</span></div><div class="lab"><b>Changes to the model without a person.</b> Adopted weights wait for a recorded grant, by design and by test.</div><a class="src" href="https://sjgant80-hub.github.io/the-distillation/#loop">receipt: the gate at the weights ↗</a></div></div>
+    <div class="acts" style="margin-top:44px">
+      <div class="act reveal"><span class="num">THE FILTER</span><h3>Only verified work.</h3><p>Trained only on steps exact arithmetic confirmed. Never on its raw output.</p></div>
+      <div class="act reveal"><span class="num">THE TEST</span><h3>Cold, on the unseen.</h3><p>One try, no checker, on problems never trained on. Better, or the weights are dropped.</p></div>
+      <div class="act reveal"><span class="num">THE BRAKE</span><h3>A person's yes.</h3><p>No new weights stand without a recorded grant. It stops when the gains stop.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="pad alt" id="result">
   <div class="wrap">
     <p class="kline reveal">The result</p>
     <h2 class="claim reveal">The same 1B model. Once with the checks, once without. <b>The checks do the work.</b></h2>
@@ -180,7 +202,7 @@ footer{border-top:1px solid var(--line2);padding-block:46px;position:relative;z-
   </div>
 </section>
 
-<section class="pad alt" id="builds-s">
+<section class="pad" id="builds-s">
   <div class="wrap">
     <p class="kline reveal">Five builds, one engine. Each sealed, each re-runnable</p>
     <h2 class="claim reveal">Open any one. <b>Press the button. Watch it hold.</b></h2>
@@ -188,12 +210,21 @@ footer{border-top:1px solid var(--line2);padding-block:46px;position:relative;z-
   </div>
 </section>
 
-<section class="pad" id="engine">
+<section class="pad alt" id="engine">
   <div class="wrap">
     <p class="kline reveal">Under the hood</p>
     <h2 class="claim reveal">Seven layers. Each one watches the one below. <b>It bottoms out in proof, and tops out in you.</b></h2>
     <div class="stack reveal" id="stackRows"><div class="srow "><div class="d">D0</div><div class="nm"><b>Substrate</b><span>the 1B model, and the few facts it gets right cold</span></div></div><div class="srow "><div class="d">D1</div><div class="nm"><b>Bond-check</b><span>verifies every step; dissolves what it cannot prove</span></div></div><div class="srow "><div class="d">D2</div><div class="nm"><b>Trajectory</b><span>splits a stuck step until the model cannot get it wrong</span></div></div><div class="srow "><div class="d">D3</div><div class="nm"><b>Crystal</b><span>grows verified answers in parallel, reusing proven work</span><span class="tag cy">94% of tokens reused</span></div></div><div class="srow "><div class="d">D4</div><div class="nm"><b>Fuzzer</b><span>attacks its own verifier so no false bond can form</span></div></div><div class="srow gold"><div class="d">D5</div><div class="nm"><b>Distillation</b><span>learns from its own verified traces to get better cold</span><span class="tag gd">sealing now</span></div></div><div class="srow "><div class="d">D6</div><div class="nm"><b>You</b><span>nothing irreversible, and no new weights, without your grant</span></div></div></div>
     <div class="wins" id="wins"><div class="win reveal"><div class="wn">94%</div><div class="wl">of tokens taken over from proven work, not worked out again <a class="src" href="https://sjgant80-hub.github.io/the-distillation/data/parity.json">receipt ↗</a></div></div><div class="win reveal"><div class="wn">0<span class="of">/26,086</span></div><div class="wl">forged replies that got past the check <a class="src" href="https://sjgant80-hub.github.io/the-crystal/">receipt ↗</a></div></div><div class="win reveal"><div class="wn">26<span class="of">/27</span></div><div class="wl">sealed claims passed across the builds; 1 failed and is kept; 6 more are sealing now</div></div><div class="win reveal"><div class="wn">68<span class="of">/68</span></div><div class="wl">planted bugs caught in this page's own kernels <a class="src" href="data/gates.json">receipt ↗</a></div></div></div>
+  </div>
+</section>
+
+<section class="pad" id="estate">
+  <div class="wrap">
+    <p class="kline reveal">The estate behind it</p>
+    <h2 class="claim reveal">One builder. <b>Everything in the open.</b></h2>
+    <div class="stats" id="estateStats"><div class="stat reveal"><div class="n"><span class="now" data-count="1,784">1,784</span></div><div class="lab"><b>Public repositories.</b> Every one readable, forkable, yours to run.</div><a class="src" href="https://github.com/sjgant80-hub?tab=repositories">receipt: the repositories, indexed 2026-11-22 ↗</a></div><div class="stat reveal"><div class="n"><span class="now" data-count="1,586">1,586</span></div><div class="lab"><b>Live pages.</b> Most run whole in a browser tab, on your own device.</div><a class="src" href="https://github.com/sjgant80-hub?tab=repositories">receipt: the repositories, indexed 2026-11-22 ↗</a></div><div class="stat reveal"><div class="n"><span class="now">2,679</span><span class="was" style="font-size:.42em"> /2,694</span></div><div class="lab"><b>Planted bugs caught</b> across these builds' mutation gates. A bug the tests miss means it does not ship.</div><a class="src" href="data/gates.json">receipt: this page's own gate ↗</a></div></div>
+    <div class="stack reveal" id="shelf"><a class="srow" href="https://sjgant80-hub.github.io/witness/" style="text-decoration:none"><div class="d">PROOF</div><div class="nm"><b>witness</b><span>A build gate that catches tests which prove nothing.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/kar-scopeguard/" style="text-decoration:none"><div class="d">PROOF</div><div class="nm"><b>kar-scopeguard</b><span>Did the coding agent get its green honestly?</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/proven-shelf/" style="text-decoration:none"><div class="d">PROOF</div><div class="nm"><b>proven-shelf</b><span>A badge that means one thing: this proof re-runs.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/estate-genome/" style="text-decoration:none"><div class="d">PROOF</div><div class="nm"><b>estate-genome</b><span>The birth check every part must pass.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/fallforgemint/" style="text-decoration:none"><div class="d">OWN</div><div class="nm"><b>fallforgemint</b><span>Bring a task; walk out owning the model.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/slm-suite/" style="text-decoration:none"><div class="d">OWN</div><div class="nm"><b>slm-suite</b><span>Industry small models with a verified library.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/kardlings/" style="text-decoration:none"><div class="d">OWN</div><div class="nm"><b>kardlings</b><span>A card that is a working mind you own.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/liveware/" style="text-decoration:none"><div class="d">OWN</div><div class="nm"><b>liveware</b><span>Verify a living system in your browser.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/konomium-vault/" style="text-decoration:none"><div class="d">SOVER</div><div class="nm"><b>konomium-vault</b><span>Encrypted accounts: vault, bank ingest, tax.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/falljustice/" style="text-decoration:none"><div class="d">SOVER</div><div class="nm"><b>falljustice</b><span>UK consumer claims, with cited law.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/divorcerbot/" style="text-decoration:none"><div class="d">SOVER</div><div class="nm"><b>divorcerbot</b><span>UK divorce self-help on verified law.</span><span class="tag cy">live ↗</span></div></a><a class="srow" href="https://sjgant80-hub.github.io/sovereign-browser/" style="text-decoration:none"><div class="d">SOVER</div><div class="nm"><b>sovereign-browser</b><span>One governed AI of your own, on any site.</span><span class="tag cy">live ↗</span></div></a></div>
   </div>
 </section>
 
@@ -203,8 +234,8 @@ footer{border-top:1px solid var(--line2);padding-block:46px;position:relative;z-
     <h2 class="claim reveal">One rule for every page: <b>verify or dissolve, <em>shown.</em></b></h2>
     <div class="glass reveal">
       <h3>Hold a page to the standard</h3>
-      <p class="hint">Seven checks, run here, in your tab, on each build's live page. A page that fails stays on this wall, in red, until it is rebuilt.</p>
-      <div class="stack" style="margin-top:0" id="wall"><div class="srow red"><div class="d">01</div><div class="nm"><b>The Climb</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="6347 words before any click (at most 1250); the longest paragraph is 272 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="0 of 4 house colours, 0 of 3 house faces">H6✗</span> <span class="fail" title="the credit line is on the page; a price is on the page; no private shorthand">H7✗</span> · 6,347 words before a click</span><span class="tag rd">fails 6 of 7 · kept</span></div></div><div class="srow red"><div class="d">02</div><div class="nm"><b>The Crystal</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="3326 words before any click (at most 1250); the longest paragraph is 253 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="1 of 4 house colours, 3 of 3 house faces">H6✗</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 3,326 words before a click</span><span class="tag rd">fails 5 of 7 · kept</span></div></div><div class="srow red"><div class="d">03</div><div class="nm"><b>The Verifier Set</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="5099 words before any click (at most 1250); the longest paragraph is 224 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="1 of 4 house colours, 3 of 3 house faces">H6✗</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 5,099 words before a click</span><span class="tag rd">fails 5 of 7 · kept</span></div></div><div class="srow red"><div class="d">04</div><div class="nm"><b>The Seed</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="2010 words before any click (at most 1250); the longest paragraph is 205 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="2 of 4 house colours, 2 of 3 house faces">H6✗</span> <span class="fail" title="the credit line is missing; no price; no private shorthand">H7✗</span> · 2,010 words before a click</span><span class="tag rd">fails 6 of 7 · kept</span></div></div><div class="srow "><div class="d">05</div><div class="nm"><b>The Distillation</b><span><span class="pass" title="crystal hero, 3 receipts, 15 stack rows, 20 controls on the glass, 11 expanders">H1✓</span> <span class="pass" title="932 words before any click (at most 1250); the longest paragraph is 22 words (at most 45)">H2✓</span> <span class="pass" title="3 of 3 receipts carry their source, or say they are still sealing">H3✓</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="pass" title="31 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✓</span> <span class="pass" title="4 of 4 house colours, 3 of 3 house faces">H6✓</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 932 words before a click</span><span class="tag cy">meets it</span></div></div></div>
+      <p class="hint">Seven checks, run in your tab on each live page. A page that fails stays here, in red, until rebuilt.</p>
+      <div class="stack" style="margin-top:0" id="wall"><div class="srow red"><div class="d">01</div><div class="nm"><b>The Climb</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="6347 words before any click (at most 1250); the longest paragraph is 272 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="0 of 4 house colours, 0 of 3 house faces">H6✗</span> <span class="fail" title="the credit line is on the page; a price is on the page; no private shorthand">H7✗</span> · 6,347 words before a click</span><span class="tag rd">fails 6 of 7 · kept</span></div></div><div class="srow red"><div class="d">02</div><div class="nm"><b>The Crystal</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="3326 words before any click (at most 1250); the longest paragraph is 253 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="1 of 4 house colours, 3 of 3 house faces">H6✗</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 3,326 words before a click</span><span class="tag rd">fails 5 of 7 · kept</span></div></div><div class="srow red"><div class="d">03</div><div class="nm"><b>The Verifier Set</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="5099 words before any click (at most 1250); the longest paragraph is 224 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="1 of 4 house colours, 3 of 3 house faces">H6✗</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 5,099 words before a click</span><span class="tag rd">fails 5 of 7 · kept</span></div></div><div class="srow red"><div class="d">04</div><div class="nm"><b>The Seed</b><span><span class="fail" title="missing: the crystal hero, receipts, a stack, a glass with something to press, an honest expander">H1✗</span> <span class="fail" title="2010 words before any click (at most 1250); the longest paragraph is 205 words (at most 45)">H2✗</span> <span class="fail" title="0 of 0 receipts carry their source, or say they are still sealing">H3✗</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="fail" title="0 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✗</span> <span class="fail" title="2 of 4 house colours, 2 of 3 house faces">H6✗</span> <span class="fail" title="the credit line is missing; no price; no private shorthand">H7✗</span> · 2,010 words before a click</span><span class="tag rd">fails 6 of 7 · kept</span></div></div><div class="srow "><div class="d">05</div><div class="nm"><b>The Distillation</b><span><span class="pass" title="crystal hero, 3 receipts, 15 stack rows, 20 controls on the glass, 11 expanders">H1✓</span> <span class="pass" title="985 words before any click (at most 1250); the longest paragraph is 27 words (at most 45)">H2✓</span> <span class="pass" title="3 of 3 receipts carry their source, or say they are still sealing">H3✓</span> <span class="pass" title="no placeholder on the page">H4✓</span> <span class="pass" title="31 limits behind a click (at least 3); a failure or an unfinished part is shown as one">H5✓</span> <span class="pass" title="4 of 4 house colours, 3 of 3 house faces">H6✓</span> <span class="pass" title="the credit line is on the page; no price; no private shorthand">H7✓</span> · 985 words before a click</span><span class="tag cy">meets it</span></div></div></div>
       <div class="row" style="margin-top:18px"><button id="recheck" class="btn primary" type="button">Read them again, live</button><button id="tryPage" class="btn ghost" type="button">Check the page you paste</button></div>
       <textarea id="paste" spellcheck="false" aria-label="Any page's HTML" placeholder="Paste any page's HTML here, then press the button." style="margin-top:14px;min-height:90px"></textarea>
       <p class="out" id="pasteOut" aria-live="polite">Paste a page to see which of the seven it meets.</p>
@@ -216,14 +247,14 @@ footer{border-top:1px solid var(--line2);padding-block:46px;position:relative;z-
   <div class="wrap">
     <p class="kline reveal">Why it was built</p>
     <h2 class="claim reveal" style="max-width:24ch">The industry is building the opposite, and asking you to <em>trust it anyway.</em></h2>
-    <p class="lede reveal">Giant models, rented by the token, on someone else's servers. <b>This is the other direction:</b> AI you own, that proves itself, that a stranger can verify in a browser tab. Trustworthy because it is <b>checkable</b>, not because it is big.</p>
+    <p class="lede reveal">Giant models, rented by the token, on someone else's servers. <b>This is the other direction:</b> AI you own, that a stranger can verify in a browser tab. Trustworthy because it is <b>checkable</b>.</p>
   </div>
 </section>
 
 <section class="pad proof" id="proof">
   <div class="wrap">
     <h2 class="hl reveal"><span class="a">Don't trust us.</span><br><span class="b">Re-run it.</span></h2>
-    <p class="sub2 reveal">Every number on this page is sealed and reproducible. Open any build, press the button, and watch it hold on your own hardware.</p>
+    <p class="sub2 reveal">Every number here is sealed and reproducible. Open any build and watch it hold on your own hardware.</p>
     <div class="links reveal"><a class="plink" href="https://sjgant80-hub.github.io/the-verifier-set/">the verifier set ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-crystal/">the crystal ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-climb/">the climb ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-seed/">the seed ↗</a><a class="plink" href="https://sjgant80-hub.github.io/the-distillation/">the distillation ↗</a><a class="plink" href="https://github.com/sjgant80-hub/house-standard">the standard ↗</a></div>
     <details class="honest reveal"><summary>What this does — and doesn't — claim</summary><div class="in">
       <p><b>It is narrow on purpose.</b> It works where truth is machine-checkable: arithmetic, logic, facts cited from a document. Everywhere else it says "I can't tell". That refusal is the product.</p>
@@ -245,7 +276,7 @@ footer{border-top:1px solid var(--line2);padding-block:46px;position:relative;z-
       <div class="brand">AI Native Solutions</div>
       <div class="fnote">Sovereign, verifiable AI · built by Kar · MIT licence (holder Simon Gant) · <a href="https://www.ai-nativesolutions.com">ai-nativesolutions.com</a><br>Powered by the Konomi architecture, created by Thomas Frumkin.</div>
     </div>
-    <div class="taglist"><span>›</span> AI you own. Proof you can re-run.<br><span>›</span> A small model that says "I can't tell."<br><span>›</span> Nothing leaves your browser.</div>
+    <div class="taglist"><span>›</span> AI you own. Proof you can re-run.<br><span>›</span> It teaches itself, only what it can prove.<br><span>›</span> A small model that says "I can't tell."</div>
   </div>
 </footer>
 <script type="module">
@@ -683,12 +714,51 @@ const bind = (k, html) => { for (const el of document.querySelectorAll(`[data-bi
 const getText = async (p) => { try { const r = await fetch(p); return r.ok ? await r.text() : null; } catch { return null; } };
 const getJSON = async (p) => { const t = await getText(p); try { return t === null ? null : JSON.parse(t); } catch { return null; } };
 const SEALING = '<span class="tag gd">sealing now</span>';
-const S = { builds: [], reuse: null, gate: null, read: null, live: null, crystal: null, faces: [] };
+const S = { builds: [], reuse: null, gate: null, read: null, live: null, crystal: null, faces: [], estate: null, loop: null, dev: null };
 const B = (repo) => S.builds.find((b) => b.repo === repo) || null;
 const src = (b, what) => `<a class="src" href="${b.live}">receipt: ${esc(what)} ↗</a>`;
 const LAYERS = [['D0', 'Substrate', 'the 1B model, and the few facts it gets right cold'], ['D1', 'Bond-check', 'verifies every step; dissolves what it cannot prove'], ['D2', 'Trajectory', 'splits a stuck step until the model cannot get it wrong'], ['D3', 'Crystal', 'grows verified answers in parallel, reusing proven work'], ['D4', 'Fuzzer', 'attacks its own verifier so no false bond can form'], ['D5', 'Distillation', 'learns from its own verified traces to get better cold'], ['D6', 'You', 'nothing irreversible, and no new weights, without your grant']];
 
+// ── self-improvement, shown: the loop as a ring, the round as it runs, and what has landed ──
+const RING = [['harvest', 'Harvest'], ['build', 'Verify'], ['train', 'Distil'], ['cold-base', 'Test cold'], ['judged', 'Adopt or dissolve'], ['grant', 'A person\'s grant']];
+function renderLoop() {
+  const l = S.loop, d = B('the-distillation'), stage = l && l.stage === 'cold-distilled' ? 'cold-base' : l ? l.stage : null, at = RING.findIndex(([k]) => k === stage), running = l && at >= 0 && !l.done && !l.failed;
+  const pt = (i) => { const a = -Math.PI / 2 + i * Math.PI / 3; return [300 + 118 * Math.cos(a), 150 + 118 * Math.sin(a)]; };
+  const nodes = RING.map(([, name], i) => { const [x, y] = pt(i), on = running && i === at, past = (l && l.done) || (running && i < at); const tx = x + (x > 310 ? 16 : x < 290 ? -16 : 0), anchor = x > 310 ? 'start' : x < 290 ? 'end' : 'middle', ty = y + (anchor === 'middle' ? (y < 150 ? -16 : 26) : 4);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${on ? 9 : 6}" fill="${on ? '#ffcf6a' : past ? '#49e8c8' : '#02070c'}" stroke="${on ? '#ffcf6a' : past ? '#49e8c8' : '#6f8698'}" stroke-width="2"/><text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor}" fill="${on ? '#ffcf6a' : past ? '#e9f2f6' : '#aebecb'}">${name}</text>`; }).join('');
+  $('ring').innerHTML = `<svg viewBox="0 0 600 300" style="width:100%;max-width:640px;height:auto;display:block;margin:0 auto 8px" role="img" aria-label="The loop: harvest, verify, distil, test cold, adopt or dissolve, a person's grant, and round again.${running ? ` Now at: ${RING[at][1]}.` : ''}"><style>text{font:500 12px 'JetBrains Mono',ui-monospace,monospace}@keyframes orbit{to{transform:rotate(360deg)}}.orb{transform-origin:300px 150px;animation:orbit 14s linear infinite}@media(prefers-reduced-motion:reduce){.orb{animation:none}}</style><circle cx="300" cy="150" r="118" fill="none" stroke="rgba(255,255,255,.1)"/><g class="orb"><circle cx="300" cy="32" r="3" fill="#49e8c8"/><path d="M300 32A118 118 0 0 0 244 46" fill="none" stroke="#49e8c8" stroke-width="1.5" opacity=".5"/></g>${nodes}<text x="300" y="146" text-anchor="middle" fill="#e9f2f6" style="font:500 15px 'JetBrains Mono',monospace">${running ? 'running now' : l && l.done ? 'round judged' : 'between rounds'}</text><text x="300" y="166" text-anchor="middle" fill="#6f8698">${l && l.round ? (l.round === 'dev' ? 'development round' : `round ${l.round}`) : 'the loop'}</text></svg>`;
+  let line = 'No round is running right now.';
+  if (l && l.stage && l.stage !== 'idle') {
+    const what = l.round === 'dev' ? 'The development round' : `Round ${l.round}`, t = l.train, h = l.harvest, c = l.stage === 'cold-distilled' ? l.cold.distilled : l.cold && l.cold.base;
+    line = `${what} is starting.`;
+    if (l.stage === 'harvest' && h) line = `${what}: <b>${h.done} of ${h.total}</b> problems worked under the checker · ${h.complete} finished.`;
+    if (l.stage === 'build') line = `${what}: <b>${l.examples}</b> verified examples built.`;
+    if (l.stage === 'train' && t) line = `${what}: learning its own verified working · <b>step ${t.step} of ${t.steps}</b>${t.loss.length ? ` · training loss ${t.loss[0].toFixed(3)} → ${t.loss[t.loss.length - 1].toFixed(3)}` : ''}.`;
+    if ((l.stage === 'cold-base' || l.stage === 'cold-distilled') && c) line = `${what}: held-out problems, cold, ${l.stage === 'cold-base' ? 'before' : 'after'} training · <b>${c.done} of ${c.total}</b>.`;
+    if (l.stage === 'judged') line = `${what}: judged. The numbers appear here once every record has been checked again.`;
+    if (t && t.loss.length > 1) { const top = Math.max(...t.loss, 0.001), pts = t.loss.map((y, i) => `${(i / (t.loss.length - 1) * 300).toFixed(1)},${(58 - 54 * Math.min(1, y / top)).toFixed(1)}`).join(' '); line += `<svg class="spark" viewBox="0 0 300 60" preserveAspectRatio="none" role="img" aria-label="Training loss, falling."><polyline points="${pts}" fill="none" stroke="#49e8c8" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="dim" style="font-size:11.5px">training loss on its own verified working</span>`; }
+    line += `<br><span class="dim" style="font-size:11.5px">as of ${esc(String(l.at || '').replace('T', ' ').slice(0, 16))} UTC · <a href="${d ? d.live : '#'}" style="color:inherit">open the build</a></span>`;
+  }
+  $('liveBox').innerHTML = line;
+  const h = d && d.headline, dv = S.dev && S.dev.cold;
+  const src = d ? `<a class="src" href="${d.live}">receipt: the distillation ↗</a>` : '';
+  $('rsiReceipts').innerHTML = (h ? `<div class="stat reveal"><div class="n"><span class="was">${esc(h.was)}</span><span class="arrow">→</span><span class="now">${esc(h.now)}</span></div><div class="lab"><b>Right, cold, on ${h.of} unseen problems.</b> The same model, before and after one round of its own verified work.</div>${src}</div>` : `<div class="stat reveal"><div class="n"><span class="was">—</span><span class="arrow">→</span><span class="wait">—</span></div><div class="lab"><b>Round 1, cold, on unseen problems.</b> The number lands here, pass or fail. ${SEALING}</div></div>`)
+    + (dv ? `<div class="stat reveal"><div class="n"><span class="was">${dv.base.right}</span><span class="arrow">→</span><span class="${dv.distilled.right > dv.base.right ? 'wait' : 'bad'}">${dv.distilled.right}</span></div><div class="lab"><b>The development round</b>, of ${dv.n} unseen problems. It shaped the settings and is not a claim. <span class="tag gd">not a claim</span></div>${d ? `<a class="src" href="${d.live}data/dev/verdict.json">receipt: its verdict ↗</a>` : ''}</div>` : `<div class="stat reveal"><div class="n"><span class="wait">6</span></div><div class="lab"><b>Claims written down first.</b> Lift, still honest, the wall moved, verify-or-dissolve, clean data, held-out integrity. ${SEALING}</div>${d ? `<a class="src" href="${d.live}CLAIMS.md">receipt: the claims ↗</a>` : ''}</div>`)
+    + `<div class="stat reveal"><div class="n"><span class="now">0</span></div><div class="lab"><b>Changes to the model without a person.</b> Adopted weights wait for a recorded grant, by design and by test.</div>${d ? `<a class="src" href="${d.live}#loop">receipt: the gate at the weights ↗</a>` : ''}</div>`;
+}
+function renderEstate() {
+  const e = S.estate;
+  if (!e) { $('estateStats').innerHTML = ''; $('shelf').innerHTML = ''; return; }
+  const src = `<a class="src" href="https://github.com/${esc(e.org)}?tab=repositories">receipt: the repositories, indexed ${esc(e.indexed)} ↗</a>`;
+  const gates = S.builds.filter((b) => b.gate), killed = gates.reduce((a, b) => a + b.gate.killed, 0) + (S.gate ? S.gate.killed : 0), total = gates.reduce((a, b) => a + b.gate.total, 0) + (S.gate ? S.gate.total : 0);
+  $('estateStats').innerHTML = `<div class="stat reveal"><div class="n"><span class="now" data-count="${e.public.toLocaleString('en')}">${e.public.toLocaleString('en')}</span></div><div class="lab"><b>Public repositories.</b> Every one readable, forkable, yours to run.</div>${src}</div>`
+    + `<div class="stat reveal"><div class="n"><span class="now" data-count="${e.live.toLocaleString('en')}">${e.live.toLocaleString('en')}</span></div><div class="lab"><b>Live pages.</b> Most run whole in a browser tab, on your own device.</div>${src}</div>`
+    + `<div class="stat reveal"><div class="n"><span class="now">${killed.toLocaleString('en')}</span><span class="was" style="font-size:.42em"> /${total.toLocaleString('en')}</span></div><div class="lab"><b>Planted bugs caught</b> across these builds' mutation gates. A bug the tests miss means it does not ship.</div><a class="src" href="data/gates.json">receipt: this page's own gate ↗</a></div>`;
+  $('shelf').innerHTML = e.shelf.map((r, i) => `<a class="srow" href="${r.url}" style="text-decoration:none"><div class="d">${esc(r.row.split(' ')[0].toUpperCase().slice(0, 5))}</div><div class="nm"><b>${esc(r.repo)}</b><span>${esc(r.line)}</span><span class="tag cy">live ↗</span></div></a>`).join('');
+}
+
 function render() {
+  renderLoop(); renderEstate();
   const v = B('the-verifier-set'), c = B('the-crystal'), d = B('the-distillation');
   const u = v && v.extra.find((x) => x.key === 'unanswerable'), f = c && c.extra.find((x) => x.key === 'forged');
   const none = (lab) => `<div class="stat reveal"><div class="n"><span class="wait">—</span></div><div class="lab">${lab} ${SEALING}</div></div>`;
@@ -725,6 +795,7 @@ function faces() {
   const out = [], v = B('the-verifier-set'), c = B('the-crystal'), d = B('the-distillation');
   const add = (state, text, to) => out.push({ state, text, to });
   const u = v && v.extra.find((x) => x.key === 'unanswerable'), f = c && c.extra.find((x) => x.key === 'forged');
+  add(d && d.headline ? 1 : 2, d && d.headline ? `<b>Self-improvement · ${esc(d.headline.was)} → ${esc(d.headline.now)}</b> cold, on ${d.headline.of} unseen problems` : '<b>Self-improvement</b> · round 1 · sealing now', 'rsi');
   add(u ? 1 : 2, u ? `<b>${esc(u.value)} → ${esc(u.after)}</b> · confident numbers to questions with no answer` : 'sealing now', 'result');
   add(v && v.headline ? 1 : 2, v && v.headline ? `<b>${esc(v.headline.was)} → ${esc(v.headline.now)}</b> of ${v.headline.of} sealed problems · The Verifier Set` : 'sealing now', 'result');
   add(f ? 1 : 2, f ? `<b>${esc(f.value)} of ${f.of.toLocaleString('en')}</b> forged replies got past the check · The Crystal` : 'sealing now', 'result');
@@ -750,6 +821,8 @@ async function reread() {
       if (!FLAGSHIP.same(now, b)) live.differ++;
       Object.assign(b, now);
     }
+    for (const b of S.builds) { const g = await getJSON(`../${b.repo}/data/gates.json`); if (g && Number.isInteger(g.killed) && Number.isInteger(g.total)) b.gate = { killed: g.killed, total: g.total, clean: g.clean === true }; }
+    const dv = await getJSON('../the-distillation/data/dev/verdict.json'); if (dv && dv.cold) S.dev = { cold: { n: dv.cold.n, base: { right: dv.cold.base.right }, distilled: { right: dv.cold.distilled.right } } };
     const p = await getJSON('../the-distillation/data/parity.json');
     if (p && p.grown) S.reuse = { taken: p.grown.tokens_taken_over, worked: p.grown.tokens_worked_out };
     S.live = live.got === 0 ? { tried: 0, got: 0, differ: 0 } : live;
@@ -766,7 +839,8 @@ function tryPage() {
 
 const ready = (async () => {
   const f = await getJSON('data/flagships.json');
-  if (f) Object.assign(S, { builds: f.builds, reuse: f.reuse, read: f.read });
+  if (f) Object.assign(S, { builds: f.builds, reuse: f.reuse, read: f.read, dev: f.dev || null, loop: f.loop || null });
+  S.estate = await getJSON('data/estate.json');
   S.gate = await getJSON('data/gates.json');
   render();
   $('recheck').addEventListener('click', reread);
@@ -780,7 +854,8 @@ const ready = (async () => {
   }
   if (typeof document.querySelectorAll === 'function') for (const el of document.querySelectorAll('[data-count]')) HOUSE.count(el, el.getAttribute('data-count'));
   HOUSE.reveal(document); HOUSE.light(document);
-  if (typeof location !== 'undefined' && /^https?:$/.test(location.protocol)) reread();   // live, as soon as the page is open
+  const loop = async () => { const l = await getJSON(`../the-distillation/data/live.json?${Date.now()}`); if (l && l.stage) { S.loop = l; renderLoop(); HOUSE.reveal(document); if (S.crystal && !l.done && !l.failed && l.stage !== 'idle') S.crystal.setEnergy(1.2); } };
+  if (typeof location !== 'undefined' && /^https?:$/.test(location.protocol)) { reread(); loop(); if (typeof setInterval === 'function') setInterval(loop, 60000); }   // live, as soon as the page is open, and kept live
   if (typeof navigator !== 'undefined' && navigator.serviceWorker && typeof location !== 'undefined' && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 window.__house = { ready, S, render, reread, tryPage, faces };

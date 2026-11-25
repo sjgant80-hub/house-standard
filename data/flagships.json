@@ -69,6 +69,11 @@
     ],
     "viewWords": 6347,
     "longest": 272
+   },
+   "gate": {
+    "killed": 601,
+    "total": 610,
+    "clean": true
    }
   },
   {
@@ -140,6 +145,11 @@
     ],
     "viewWords": 3326,
     "longest": 253
+   },
+   "gate": {
+    "killed": 563,
+    "total": 567,
+    "clean": true
    }
   },
   {
@@ -212,6 +222,11 @@
     ],
     "viewWords": 5099,
     "longest": 224
+   },
+   "gate": {
+    "killed": 1039,
+    "total": 1041,
+    "clean": true
    }
   },
   {
@@ -271,6 +286,11 @@
     ],
     "viewWords": 2010,
     "longest": 205
+   },
+   "gate": {
+    "killed": 131,
+    "total": 131,
+    "clean": true
    }
   },
   {
@@ -300,7 +320,7 @@
      {
       "id": "H2",
       "pass": true,
-      "why": "932 words before any click (at most 1250); the longest paragraph is 22 words (at most 45)"
+      "why": "985 words before any click (at most 1250); the longest paragraph is 27 words (at most 45)"
      },
      {
       "id": "H3",
@@ -328,14 +348,25 @@
       "why": "the credit line is on the page; no price; no private shorthand"
      }
     ],
-    "viewWords": 932,
-    "longest": 22
+    "viewWords": 985,
+    "longest": 27
+   },
+   "gate": {
+    "killed": 277,
+    "total": 277,
+    "clean": true
    }
   }
  ],
  "reuse": {
   "taken": 11886,
   "worked": 793
+ },
+ "dev": null,
+ "loop": {
+  "v": "the-distillation-live/1",
+  "round": null,
+  "stage": "idle"
  },
  "gate": {
   "killed": 68,
