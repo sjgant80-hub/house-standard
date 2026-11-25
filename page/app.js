@@ -47,7 +47,7 @@ function renderEstate() {
   const gates = S.builds.filter((b) => b.gate), killed = gates.reduce((a, b) => a + b.gate.killed, 0) + (S.gate ? S.gate.killed : 0), total = gates.reduce((a, b) => a + b.gate.total, 0) + (S.gate ? S.gate.total : 0);
   $('estateStats').innerHTML = `<div class="stat reveal"><div class="n"><span class="now" data-count="${e.public.toLocaleString('en')}">${e.public.toLocaleString('en')}</span></div><div class="lab"><b>Public repositories.</b> Every one readable, forkable, yours to run.</div>${src}</div>`
     + `<div class="stat reveal"><div class="n"><span class="now" data-count="${e.live.toLocaleString('en')}">${e.live.toLocaleString('en')}</span></div><div class="lab"><b>Live pages.</b> Each one answered when it was read on ${esc(e.read)}.</div><a class="src" href="data/estate.json">receipt: the count, as read ↗</a></div>`
-    + `<div class="stat reveal"><div class="n"><span class="now">${killed.toLocaleString('en')}</span><span class="was" style="font-size:.42em"> /${total.toLocaleString('en')}</span></div><div class="lab"><b>Planted bugs caught</b> across these builds' mutation gates.${total > killed ? ` Each of the ${total - killed} not caught is written down with its reason.` : ' None exempted.'}</div><a class="src" href="data/gates.json">receipt: this page's own gate ↗</a></div>`;
+    + `<div class="stat reveal"><div class="n"><span class="now">${killed.toLocaleString('en')}</span><span class="was" style="font-size:.42em"> /${total.toLocaleString('en')}</span></div><div class="lab"><b>Planted bugs caught</b> across these builds, by their own tests.${total > killed ? ` Each of the ${total - killed} not caught is written down with its reason.` : ' None exempted.'}</div><a class="src" href="data/gates.json">receipt: this page's own gate ↗</a></div>`;
   bind('h.rest', `Of ${e.live.toLocaleString('en')} older live pages read on ${esc(e.read)}, ${e.onStandard === 0 ? 'none meets' : `${e.onStandard} meet`} it. The five builds above, made since, do. The rest come over in order of what is public-facing.`);
   $('shelf').innerHTML = e.shelf.map((r, i) => `<a class="srow" href="${r.url}" style="text-decoration:none"><div class="d">${esc(r.row.split(' ')[0].toUpperCase().slice(0, 5))}</div><div class="nm"><b>${esc(r.repo)}</b><span>${esc(r.line)}</span><span class="tag cy">live ↗</span></div></a>`).join('');
 }
@@ -64,19 +64,19 @@ function render() {
   $('builds').innerHTML = S.builds.map((b, i) => { const h = b.headline, wait = !h && b.claims.sealing > 0, cells = grown(b);
     return `<a class="act reveal" href="${b.live}"><span class="num">0${i + 1} — ${esc(b.name.toUpperCase())}${wait ? ` ${SEALING}` : ''}</span><h3>${esc(b.verb)}</h3><p>${esc(b.line)}${h ? ` <b style="color:var(--ink)">${esc(h.was)} → ${esc(h.now)}</b> of ${h.of} sealed problems.` : cells ? ` <b style="color:var(--ink)">${esc(cells.sealed)} of ${cells.of}</b> cells sealed, ${esc(cells.dissolved)} dissolved.` : ''}${b.claims.n ? ` <span class="dim">${b.claims.pass} of ${b.claims.n} claims passed${b.claims.fail ? `, ${b.claims.fail} failed and kept` : ''}${b.claims.sealing ? `, ${b.claims.sealing} sealing` : ''}.</span>` : ''}</p><span class="go">Open the live proof →</span></a>`; }).join('');
   const reuse = S.reuse ? Math.round(100 * S.reuse.taken / (S.reuse.taken + S.reuse.worked)) : null;
-  const tagOf = (id) => (id === 'D3' && reuse !== null ? `<span class="tag cy">${reuse}% of tokens reused</span>` : id === 'D5' ? (d && d.headline ? `<span class="tag cy">${esc(d.headline.was)} → ${esc(d.headline.now)} cold</span>` : SEALING) : '');
+  const tagOf = (id) => (id === 'D3' && reuse !== null ? `<span class="tag cy">${reuse}% of work reused</span>` : id === 'D5' ? (d && d.headline ? `<span class="tag cy">${esc(d.headline.was)} → ${esc(d.headline.now)} cold</span>` : SEALING) : '');
   $('stackRows').innerHTML = LAYERS.map(([id, nm, line]) => `<div class="srow ${id === 'D5' && !(d && d.headline) ? 'gold' : ''}"><div class="d">${id}</div><div class="nm"><b>${nm}</b><span>${line}</span>${tagOf(id)}</div></div>`).join('');
   const win = (n, l, href) => `<div class="win reveal"><div class="wn">${n}</div><div class="wl">${l}${href ? ` <a class="src" href="${href}">receipt ↗</a>` : ''}</div></div>`;
   const pass = S.builds.reduce((a, b) => a + b.claims.pass, 0), fail = S.builds.reduce((a, b) => a + b.claims.fail, 0), sealing = S.builds.reduce((a, b) => a + b.claims.sealing, 0);
-  $('wins').innerHTML = win(reuse !== null ? `${reuse}%` : '—', 'of tokens taken over from proven work, not worked out again', d ? `${d.live}data/parity.json` : '')
+  $('wins').innerHTML = win(reuse !== null ? `${reuse}%` : '—', 'of the work taken over from proven work, not worked out again', d ? `${d.live}data/parity.json` : '')
     + win(f ? `${esc(f.value)}<span class="of">/${f.of.toLocaleString('en')}</span>` : '—', 'forged replies that got past the check', c ? c.live : '')
     + win(`${pass}<span class="of">/${pass + fail}</span>`, `sealed claims passed across the builds; ${fail} failed and ${fail === 1 ? 'is' : 'are'} kept${sealing ? `; ${sealing} more are sealing now` : ''}`, '')
-    + win(S.gate ? `${S.gate.killed}<span class="of">/${S.gate.total}</span>` : '—', 'planted bugs caught in this page\'s own kernels', 'data/gates.json');
+    + win(S.gate ? `${S.gate.killed}<span class="of">/${S.gate.total}</span>` : '—', 'planted bugs caught in this page\'s own code', 'data/gates.json');
   $('wall').innerHTML = S.builds.map((b, i) => { const bad = b.standard.rules.filter((r) => !r.pass);
     return `<div class="srow ${b.standard.pass ? '' : 'red'}"><div class="d">0${i + 1}</div><div class="nm"><b>${esc(b.name)}</b><span>${b.standard.rules.map((r) => `<span class="${r.pass ? 'pass' : 'fail'}" title="${esc(r.why)}">${r.id}${r.pass ? '✓' : '✗'}</span>`).join(' ')} · ${b.standard.viewWords.toLocaleString('en')} words before a click</span>${b.standard.pass ? '<span class="tag cy">meets it</span>' : `<span class="tag rd">fails ${bad.length} of 7 · kept</span>`}</div></div>`; }).join('');
   const failed = S.builds.flatMap((b) => b.claims.failed.map((x) => `${esc(b.name)}'s ${esc(x.id)} (${esc(x.name.toLowerCase())})`));
   bind('h.failed', failed.length ? `${failed.join('; ')} failed its bar and is still on its page, in red.` : 'No sealed claim has failed so far; when one does it stays on its page, in red.');
-  bind('h.gate', S.gate ? `Its kernels' mutation gate: ${S.gate.killed} of ${S.gate.total} planted bugs caught.` : '');
+  bind('h.gate', S.gate ? `Its own code's gate: ${S.gate.killed} of ${S.gate.total} planted bugs caught.` : '');
   S.faces = faces();
   const toRebuild = S.builds.filter((b) => !b.standard.pass).length;
   S.rest = `${S.faces.filter((x) => x.state === 1).length} receipts sealed · ${S.faces.filter((x) => x.state === 2).length} sealing now · ${failed.length} failed and kept${toRebuild ? ` · ${toRebuild} ${toRebuild === 1 ? 'page' : 'pages'} still to rebuild` : ''} · point at a face`;
@@ -131,8 +131,8 @@ async function reread() {
 function tryPage() {
   const html = $('paste').value;
   if (!html.trim()) { $('pasteOut').innerHTML = 'Paste a page first.'; return; }
-  const r = STANDARD.check(html);
-  $('pasteOut').innerHTML = `${r.pass ? '<span class="pass">It meets the house standard.</span>' : `<span class="fail">It fails ${r.rules.filter((x) => !x.pass).length} of 7.</span>`}<br>${r.rules.map((x) => `<span class="${x.pass ? 'pass' : 'fail'}">${x.id} ${esc(x.name)}</span>: ${esc(x.why)}`).join('<br>')}`;
+  const r = STANDARD.check(html), p = PLAIN.check(html), line = (x) => `<span class="${x.pass ? 'pass' : 'fail'}">${x.id} ${esc(x.name)}</span>: ${esc(x.why)}`;
+  $('pasteOut').innerHTML = `${r.pass ? '<span class="pass">It meets the house standard.</span>' : `<span class="fail">It fails ${r.rules.filter((x) => !x.pass).length} of 7.</span>`}<br>${r.rules.map(line).join('<br>')}<br><br>${p.pass ? '<span class="pass">A twelve-year-old can read it.</span>' : `<span class="fail">It is not plain enough yet: ${p.rules.filter((x) => !x.pass).length} of 5.</span>`}<br>${p.rules.map(line).join('<br>')}`;
 }
 
 const ready = (async () => {

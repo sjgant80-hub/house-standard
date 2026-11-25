@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 // [namespace, file] in dependency order; each module may import only from the ones above it
 export const KERNELS = [
   // the kit (the crystal and the motion), then this repository's kernels: the ship gate, the receipts reader, and the reading of a flagship
-  ['CRYSTAL', 'kit/crystal.js'], ['HOUSE', 'kit/house.js'], ['STANDARD', 'src/standard.mjs'], ['RECEIPTS', 'src/receipts.mjs'], ['FLAGSHIP', 'src/flagship.mjs'],
+  ['CRYSTAL', 'kit/crystal.js'], ['HOUSE', 'kit/house.js'], ['STANDARD', 'src/standard.mjs'], ['RECEIPTS', 'src/receipts.mjs'], ['FLAGSHIP', 'src/flagship.mjs'], ['PLAIN', 'src/plain.mjs'],
 ];
 // what bake() writes into the page: these ids, and every data-bind. What a visitor does on the page is their own.
 export const BAKED = ['facet', 'ring', 'rsiReceipts', 'receipts', 'builds', 'stackRows', 'wins', 'estateStats', 'shelf', 'wall', 'readLine'];
