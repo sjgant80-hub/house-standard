@@ -299,7 +299,7 @@
    "verb": "It learns.",
    "line": "Trained only on its own verified work. Tested cold on problems it never saw.",
    "live": "https://sjgant80-hub.github.io/the-distillation/",
-   "commit": "13a8dbc7887fffe6f03115127fb44f5ae0cb965b",
+   "commit": "54cae6928c0ff3e51ef52504a762d905839c12a9",
    "headline": null,
    "extra": [],
    "claims": {
@@ -315,12 +315,12 @@
      {
       "id": "H1",
       "pass": true,
-      "why": "crystal hero, 3 receipts, 15 stack rows, 20 controls on the glass, 11 expanders"
+      "why": "crystal hero, 3 receipts, 25 stack rows, 20 controls on the glass, 11 expanders"
      },
      {
       "id": "H2",
       "pass": true,
-      "why": "985 words before any click (at most 1250); the longest paragraph is 27 words (at most 45)"
+      "why": "989 words before any click (at most 1250); the longest paragraph is 27 words (at most 45)"
      },
      {
       "id": "H3",
@@ -348,7 +348,7 @@
       "why": "the credit line is on the page; no price; no private shorthand"
      }
     ],
-    "viewWords": 985,
+    "viewWords": 989,
     "longest": 27
    },
    "gate": {
@@ -362,11 +362,31 @@
   "taken": 11886,
   "worked": 793
  },
- "dev": null,
+ "dev": {
+  "cold": {
+   "n": 89,
+   "base": {
+    "right": 31
+   },
+   "distilled": {
+    "right": 44
+   }
+  }
+ },
  "loop": {
   "v": "the-distillation-live/1",
-  "round": null,
-  "stage": "idle"
+  "round": 1,
+  "stage": "starting",
+  "harvest": null,
+  "train": null,
+  "cold": {
+   "base": null,
+   "distilled": null
+  },
+  "verdict": null,
+  "done": false,
+  "failed": false,
+  "at": "2026-11-25T22:11:31.417Z"
  },
  "gate": {
   "killed": 68,
