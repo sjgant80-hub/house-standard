@@ -29,7 +29,7 @@ function renderLoop() {
     if (l.stage === 'build') line = `${what}: <b>${l.examples}</b> verified examples built.`;
     if (l.stage === 'train' && t) line = `${what}: learning its own verified working · <b>step ${t.step} of ${t.steps}</b>${t.loss.length ? ` · training loss ${t.loss[0].toFixed(3)} → ${t.loss[t.loss.length - 1].toFixed(3)}` : ''}.`;
     if ((l.stage === 'cold-base' || l.stage === 'cold-distilled') && c) line = `${what}: held-out problems, cold, ${l.stage === 'cold-base' ? 'before' : 'after'} training · <b>${c.done} of ${c.total}</b>.`;
-    if (l.stage === 'judged') line = `${what}: judged. The numbers appear here once every record has been checked again.`;
+    if (l.stage === 'judged') line = d && d.headline && l.done ? `${what} has landed: <b>${esc(d.headline.was)} → ${esc(d.headline.now)}</b> right, cold. Its weights wait for a person's yes. No round is running now.` : `${what}: judged. The numbers appear here once every record has been checked again.`;
     if (t && t.loss.length > 1) { const top = Math.max(...t.loss, 0.001), pts = t.loss.map((y, i) => `${(i / (t.loss.length - 1) * 300).toFixed(1)},${(58 - 54 * Math.min(1, y / top)).toFixed(1)}`).join(' '); line += `<svg class="spark" viewBox="0 0 300 60" preserveAspectRatio="none" role="img" aria-label="Training loss, falling."><polyline points="${pts}" fill="none" stroke="#49e8c8" stroke-width="2" vector-effect="non-scaling-stroke"/></svg><span class="dim" style="font-size:11.5px">training loss on its own verified working</span>`; }
     line += `<br><span class="dim" style="font-size:11.5px">as of ${esc(String(l.at || '').replace('T', ' ').slice(0, 16))} UTC · <a href="${d ? d.live : '#'}" style="color:inherit">open the build</a></span>`;
   }
@@ -76,6 +76,8 @@ function render() {
     return `<div class="srow ${b.standard.pass ? '' : 'red'}"><div class="d">0${i + 1}</div><div class="nm"><b>${esc(b.name)}</b><span>${b.standard.rules.map((r) => `<span class="${r.pass ? 'pass' : 'fail'}" title="${esc(r.why)}">${r.id}${r.pass ? '✓' : '✗'}</span>`).join(' ')} · ${b.standard.viewWords.toLocaleString('en')} words before a click</span>${b.standard.pass ? '<span class="tag cy">meets it</span>' : `<span class="tag rd">fails ${bad.length} of 7 · kept</span>`}</div></div>`; }).join('');
   const failed = S.builds.flatMap((b) => b.claims.failed.map((x) => `${esc(b.name)}'s ${esc(x.id)} (${esc(x.name.toLowerCase())})`));
   bind('h.failed', failed.length ? `${failed.join('; ')} failed its bar and is still on its page, in red.` : 'No sealed claim has failed so far; when one does it stays on its page, in red.');
+  const dh = B('the-distillation') && B('the-distillation').headline;
+  bind('h.loop', dh ? `The retraining loop has run one sealed round: ${esc(dh.was)} → ${esc(dh.now)} right, cold, on ${dh.of} unseen problems. One round, one kind of problem. Its own page says where it did not improve.` : 'The loop that lets the model retrain on its own verified work is sealing now. Its number appears here when it lands, pass or fail, and not before.');
   bind('h.gate', S.gate ? `Its own code's gate: ${S.gate.killed} of ${S.gate.total} planted bugs caught.` : '');
   S.faces = faces();
   const toRebuild = S.builds.filter((b) => !b.standard.pass).length;
