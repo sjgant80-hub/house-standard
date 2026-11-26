@@ -1,0 +1,42 @@
+{
+ "v": "house-standard-walk/1",
+ "note": "A simulated walk, not a customer. On 26 November 2026 a small AI on our own laptop (qwen2.5:7b) read this page cold, as four buyers, eight readings in all, and listed what was unclear. Kar checked each point against the page and the records.",
+ "fixed": [
+  {
+   "gap": "“Sealed” was used before it was explained",
+   "fix": "the page now says: fixed before its test, and you can run it again; we call that sealed"
+  },
+  {
+   "gap": "“Forged replies that got past the check” was not plain",
+   "fix": "now “fake answers that fooled the checker”"
+  },
+  {
+   "gap": "“Rented by the token” was not plain",
+   "fix": "now “rented and paid for by use”"
+  },
+  {
+   "gap": "“Trained only on steps exact arithmetic confirmed” was not plain",
+   "fix": "now “it studies only the steps a calculator checked”"
+  },
+  {
+   "gap": "“The rest come over in order of what is public-facing” was unclear",
+   "fix": "now “the rest will be rebuilt to it, starting with the pages visitors see most”"
+  },
+  {
+   "gap": "The page did not say who Kar is",
+   "fix": "the footer now says “Kar, our AI builder”"
+  }
+ ],
+ "found": [
+  {
+   "gap": "A buyer asked what “94% of the work taken over from proven work” was a share of. Checking the record showed the label was wrong: the figure is how much of its reading the model kept from its last step in a speed test (data/parity.json of The Distillation), not proved work used again, and not The Crystal's",
+   "fix": "relabelled as a speed figure, and removed from the Crystal layer"
+  }
+ ],
+ "notChanged": [
+  {
+   "gap": "A buyer wanted a timeline for the older pages",
+   "why": "there is no dated plan to state; the page says the order, and the count of pages that meet the standard is read, not promised"
+  }
+ ]
+}
