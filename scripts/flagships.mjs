@@ -14,7 +14,7 @@ export const BUILDS = [
   { repo: 'the-crystal', name: 'The Crystal', verb: 'It crystallises.', line: 'The answer grown from proven pieces. What cannot be proven dissolves.' },
   { repo: 'the-verifier-set', name: 'The Verifier Set', verb: 'It refuses to lie.', line: 'Checked against the arithmetic or the cited source, or not released.' },
   { repo: 'the-seed', name: 'The Seed', verb: 'It grows itself.', line: 'A handful of files that grows verified software, one cell at a time.' },
-  { repo: 'the-distillation', name: 'The Distillation', verb: 'It learns.', line: 'Trained only on its own verified work. Tested cold on problems it never saw.' },
+  { repo: 'the-distillation', name: 'The Distillation', verb: 'It learns until the gains stop.', line: 'Trained only on its own verified work. Tested cold on problems it never saw.' },
 ];
 if (process.argv[1] && process.argv[1].endsWith('flagships.mjs')) {
   const at = (p) => new URL(`../${p}`, import.meta.url);
