@@ -68,3 +68,25 @@ test('the scaffold is whole, and what it makes carries the kit this repository s
   assert.ok(read('README.md').startsWith('**Live: https://sjgant80-hub.github.io/house-standard/**'));
   const g = JSON.parse(read('data/gates.json')); assert.equal(g.clean, true); assert.ok(read('README.md').includes('**' + g.killed + ' / ' + g.total + '**'), 'the README states the gate as the record has it');
 });
+
+test('a verdict tag keeps its own colour inside a stack row: a failure reads red, not grey', () => {
+  const css = read('kit/house.css');
+  // how strongly a selector binds: ids, then classes and the like, then element names
+  const spec = (sel) => [(sel.match(/#[\w-]+/g) || []).length, (sel.match(/\.[\w-]+|\[[^\]]*\]|:(?!:)[\w-]+/g) || []).length, (sel.replace(/[.#:][\w-]+|\[[^\]]*\]/g, ' ').match(/[a-z][\w-]*/gi) || []).length];
+  const outranks = (a, b) => (a[0] - b[0] || a[1] - b[1] || a[2] - b[2]) > 0;
+  const rules = [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}@]+)\{([^{}]*)\}/g)].flatMap(([, sels, body]) => sels.split(',').map((s) => ({ sel: s.trim(), body })));
+  const colour = (r) => (r.body.match(/(?:^|;)\s*color:\s*([^;]+)/) || [])[1];
+  // every rule that colours plain spans somewhere; a tag is a span, so each such place must hand tags their colour back
+  const greyers = rules.filter((r) => /\sspan$/.test(r.sel) && colour(r));
+  assert.deepEqual(greyers.map((r) => r.sel).sort(), ['.srow .nm span', '.taglist span'], 'a new rule colours spans: give verdict tags their own colour there too, and list it here');
+  const grey = greyers.find((r) => r.sel === '.srow .nm span');
+  for (const kind of ['off', 'cy', 'gd', 'rd']) {
+    const base = rules.find((r) => r.sel === `.tag.${kind}`), own = rules.find((r) => r.sel === `.srow .nm .tag.${kind}`);
+    assert.ok(base && colour(base), `.tag.${kind} has no colour of its own`);
+    assert.ok(own, `.tag.${kind} is not given its colour back inside a stack row`);
+    assert.equal(colour(own), colour(base), `.tag.${kind} is a different colour inside a stack row`);
+    assert.ok(outranks(spec(own.sel), spec(grey.sel)), `.srow .nm .tag.${kind} does not outrank ${grey.sel}`);
+    assert.equal(outranks(spec(base.sel), spec(grey.sel)), false, 'the tag\'s own rule alone was never enough: that was the fault');
+  }
+  assert.equal(colour(rules.find((r) => r.sel === '.tag.rd')), 'var(--red)');
+});
