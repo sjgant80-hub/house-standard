@@ -105,6 +105,11 @@ test('H5 the fail-wall: limits behind a click, and a failure or an unfinished pa
   assert.equal(rule(page({ stack: clean, stats: stat('<span class="tag gd">sealing now</span>') + stat(SRC) }), 'H5').pass, true, 'sealing now is an unfinished part, shown');
   for (const cls of ['fail', 'bad', 'n bad']) assert.equal(rule(page({ stack: clean + `<b class="${cls}">3 lost</b>` }), 'H5').pass, true, cls);
   assert.equal(rule(page({ stack: clean + '<b class="failsafe">x</b>' }), 'H5').pass, false);
+  // gold is the unfinished colour: a gold tag, a gold row or a waiting receipt is an unfinished part, shown, whatever its words
+  for (const gold of ['<span class="tag gd">in build</span>', '<div class="srow gold"><div class="d">05</div></div>', '<div class="srow gold reveal"><div class="d">05</div></div>', '<span class="wait">0</span>', '<span class="n wait">0</span>'])
+    assert.equal(rule(page({ stack: clean + gold }), 'H5').pass, true, gold);
+  for (const near of ['<span class="tag gdx">x</span>', '<span class="tag cy gd">x</span>', '<div class="srow golden">x</div>', '<div class="gold srow">x</div>', '<span class="waiting">x</span>', '<span class="await">x</span>', '<span class="tag">gd</span>'])
+    assert.equal(rule(page({ stack: clean + near }), 'H5').pass, false, near);
   // limits in two expanders add up; a details that is not the honest expander does not count
   assert.equal(rule(page({ honest: '<details class="honest"><summary>a</summary><p>1</p><p>2</p></details><details class="honest"><summary>b</summary><p>3</p></details>' }), 'H5').pass, true);
   assert.equal(S.measure(page({ honest: '<details><summary>a</summary><p>1</p><p>2</p><p>3</p></details>' })).limits, 0);
